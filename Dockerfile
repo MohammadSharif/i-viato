@@ -7,6 +7,8 @@ RUN apt-get -y install python3 libapache2-mod-wsgi-py3
 RUN apt-get -y install python3-pip
 RUN pip3 install --upgrade pip
 RUN pip3 install django ptvsd
+RUN pip3 install psycopg2
 ADD ./demo_site.conf /etc/apache2/sites-available/000-default.conf
 EXPOSE 80 3500
 CMD ["apache2ctl", "-D", "FOREGROUND"]
+

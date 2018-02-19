@@ -27,7 +27,7 @@ SECRET_KEY = '_si-9yio8&(3-s)905u+^g)2n=8os%_#k_wm9@wyhi=52m4(i_'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost','172.18.0.2','127.0.0.1',]
+ALLOWED_HOSTS = ['localhost','172.18.0.2','127.0.0.1', '*']
 
 
 # Application definition
@@ -79,8 +79,12 @@ WSGI_APPLICATION = 'iviato.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'iviato',
+        'USER': 'iviato',
+        'PASSWORD': 'jini1234',
+        'HOST': 'iviato.cq5kyayqghor.us-east-2.rds.amazonaws.com',
+        'PORT': '5428',
     }
 }
 
