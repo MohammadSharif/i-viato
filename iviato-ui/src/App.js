@@ -3,6 +3,7 @@ import './App.css';
 import background from './img/background.jpg';
 import SignUp from './components/SignUp';
 import SignIn from './components/SignIn';
+import LoginScreen from './components/LoginScreen';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 class App extends Component {
@@ -10,8 +11,7 @@ class App extends Component {
     return (
       <MuiThemeProvider>
         <div className="App">
-          <div className="app-bg" alt="background" />
-          <SignUp />
+          <LoginScreen />
         </div>
       </MuiThemeProvider>
     );

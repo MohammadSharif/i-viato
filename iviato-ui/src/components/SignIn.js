@@ -31,12 +31,14 @@ class SignIn extends Component {
             label="Register"
             backgroundColor='#9ca8bc'
             labelColor='#FFFFFF'
-            style={{width: "40%"}} />
+            style={{width: "40%"}}
+            onClick={() => this.props.onClick()}/>
           <RaisedButton
             label="Sign In"
             backgroundColor='#4AA9F4'
             labelColor='#FFFFFF'
-            style={{width: "40%"}}/>
+            style={{width: "40%"}}
+            />
         </div>
       </div>
     );

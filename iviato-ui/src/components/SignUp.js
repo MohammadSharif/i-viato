@@ -88,7 +88,8 @@ class SignUp extends Component {
             label="Cancel"
             backgroundColor='#9ca8bc'
             labelColor='#FFFFFF'
-            style={{width: "40%"}} />
+            style={{width: "40%"}}
+            onClick={() => this.props.onClick()}/>
           <RaisedButton
             label="Sign Up"
             backgroundColor='#4AA9F4'

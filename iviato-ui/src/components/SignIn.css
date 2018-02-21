@@ -16,7 +16,7 @@
   height: 300px;
   width: 400px;
   background-color: white;
-  box-shadow: 0px 0px 8px #888888;
+  box-shadow: 0px 0px 20px #333333;
   border-radius: 6px;
   font-family: 'Roboto', sans-serif;
 
@@ -60,4 +60,6 @@
 
 .form-header {
   margin: 0;
+  font-family: 'Roboto' sans-serif;
+  font-weight: 400;
 }
