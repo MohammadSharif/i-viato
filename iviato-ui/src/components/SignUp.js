@@ -23,6 +23,7 @@ class SignUp extends Component {
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.validateEmail = this.validateEmail.bind(this);
+    this.attemptSignUp = this.attemptSignUp.bind(this);
   }
 
 
@@ -34,14 +35,20 @@ class SignUp extends Component {
     e.preventDefault();
     console.log(this.state);
     if(!toast.isActive(this.state.toastId)){
-      if(this.state.username === ''){
-        this.setState({toastId: toast.error("Error: No email entered.")});
-      } else if (!this.validateEmail()){
-        this.setState({toastId: toast.error("Error: Email not properly entered.")});
+      if (!this.validateEmail()){
+        this.setState({toastId: toast.error("Please enter a valid email.")});
+      } else if(this.state.password === ''){
+        this.setState({toastId: toast.error("No password was specified.")});
       } else if(this.state.password !== this.state.confirmed){
-        this.setState({toastId: toast.error("Error: Passwords do not match")});
+        this.setState({toastId: toast.error("The passwords do not match.")});
+      } else {
+        this.attemptSignUp();
       }
     }
+  }
+
+  attemptSignUp(){
+    toast.success("Successfully attempting user registration.");
   }
 
   validateEmail() {
