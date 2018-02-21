@@ -1,8 +1,5 @@
 import React, { Component } from 'react';
 import './App.css';
-import background from './img/background.jpg';
-import SignUp from './components/SignUp';
-import SignIn from './components/SignIn';
 import LoginScreen from './components/LoginScreen';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
