@@ -5,6 +5,8 @@ import './SignIn.css';
 import logo from '../img/iviato.png';
 import { ToastContainer, toast, style } from 'react-toastify';
 
+const request = require('request');
+
 style({ colorError: "#d14545", fontFamily: "Roboto" });
 
 class SignIn extends Component {
@@ -41,6 +43,7 @@ class SignIn extends Component {
   }
 
   attemptSignIn(){
+    this.postSignIn();
     toast.success("Successfully attempting to login.")
   }
 
@@ -49,6 +52,24 @@ class SignIn extends Component {
       return (true)
     }
     return (false)
+  }
+
+  postSignIn = async () => {
+    const headers = new Headers()
+    headers.append('Content-type', 'application/json');
+
+    const options = {
+      url: 'http://localhost:8081/login',
+      headers: headers,
+      form: {
+        'email': `${this.state.username}`,
+        'password': `${this.state.password}`
+      }
+    };
+
+    request.post(options, (res) => {
+      console.log(res);
+    });
   }
 
   render() {

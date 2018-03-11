@@ -5,6 +5,8 @@ import { ToastContainer, toast, style } from 'react-toastify';
 import './SignUp.css';
 import logo from '../img/iviato.png';
 
+const request = require('request');
+
 style({ colorError: "#d14545", fontFamily: "Roboto" });
 
 class SignUp extends Component {
@@ -47,7 +49,28 @@ class SignUp extends Component {
     }
   }
 
+  postSignUp = async () => {
+    const headers = new Headers()
+    headers.append('Content-type', 'application/json');
+
+    const options = {
+      url: 'http://localhost:8081/signup',
+      headers: headers,
+      form: {
+        'firstName': `${this.state.firstname}`,
+        'lastName': `${this.state.lastname}`,
+        'email': `${this.state.username}`,
+        'password': `${this.state.password}`
+      }
+    };
+
+    request.post(options, (res) => {
+      console.log(res);
+    });
+  }
+
   attemptSignUp(){
+    this.postSignUp();
     toast.success("Successfully attempting user registration.");
   }
 
