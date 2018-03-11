@@ -10,3 +10,8 @@ function encrypt(clearText) {
 function decrypt(encrypted) {
     return cryptr.decrypt(encrypted);
 } 
+
+module.exports = {
+    encrypt, 
+    decrypt,
+}

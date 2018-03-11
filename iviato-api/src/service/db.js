@@ -1,6 +1,9 @@
-const { Client } = require('pg')
+const crypto = require('./crypto');
+const encrypt = crypto.encrypt;
+const decrypt = crypto.decrypt;
+const pg = require('pg')
 
-const client = new Client({
+const client = new pg.Client({
   user: 'iviato',
   host: 'iviato.cq5kyayqghor.us-east-2.rds.amazonaws.com',
   database: 'iviato',
@@ -60,3 +63,8 @@ function login(email, password) {
     }
   })
 }
+
+module.exports = {
+  signup,
+  login
+};
