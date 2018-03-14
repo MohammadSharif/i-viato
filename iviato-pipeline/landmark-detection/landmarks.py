@@ -1,6 +1,8 @@
 # -----------------------------------------------------------------------------
 # Name:     landmarks
 # Purpose:  Given a .png image file, facial landmarks are detected and returned
+#           The .png image must follow this naming pattern: 
+#           videoId_frameNumber.png
 #
 # Author: Mohammad Sharif - Hirad Pourtahmasbi
 #
@@ -118,6 +120,7 @@ gray = cv2.imread(args["image"], 0)
 # be mutliple faces detected within the image
 rects = detector(gray, 1)
 
+# Add each frames data to this list so we can write to db in the end
 # Loop over all detected faces in the image
 for i, rect in enumerate(rects):
     # get the detections and convert them into a numpy array
