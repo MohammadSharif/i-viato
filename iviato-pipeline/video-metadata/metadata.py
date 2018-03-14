@@ -22,8 +22,6 @@ def extract_metadata(path):
     return write_to_db(path, width, height, fps, frame_number)
 
 def write_to_db(name, width, height, fps, frame_number):
-    """If not created, create a database with the name specified in
-    the constructor"""
     id = None
     conn = None
     insert = """
@@ -38,6 +36,7 @@ def write_to_db(name, width, height, fps, frame_number):
                                 password="jini1234")
         cursor = conn.cursor()
         cursor.execute(insert)
+        cursor.commit()
         id = cursor.fetchone()[0]
         print(id)
     except e:
