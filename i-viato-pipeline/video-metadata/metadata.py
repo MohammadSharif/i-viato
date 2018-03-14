@@ -19,13 +19,16 @@ def extract_metadata(path):
     cap.release()
     cv2.destroyAllWindows()
 
-    write_to_db(path, width, height, fps, frame_number)
+    return write_to_db(path, width, height, fps, frame_number)
 
 def write_to_db(name, width, height, fps, frame_number):
     """If not created, create a database with the name specified in
     the constructor"""
+    id = None
     conn = None
-    insert = ""
+    insert = """
+    INSERT INTO videos."meta"(frames, width, height, fps, name) VALUES ({0}, {1}, {2}, {3}, '{4}') RETURNING id
+    """.format(frame_number, width, height, fps, name)
     print(insert)
     try:
         conn = psycopg2.connect(host="iviato.cq5kyayqghor.us-east-2.rds.amazonaws.com",
@@ -34,14 +37,13 @@ def write_to_db(name, width, height, fps, frame_number):
                                 user="iviato",
                                 password="jini1234")
         cursor = conn.cursor()
-        cursor.execute("""
-        INSERT INTO videos."meta" VALUES (%s, %s, $s, $s, $s) RETURNING id
-        """, (frame_number, width, height, fps, name))
+        cursor.execute(insert)
         id = cursor.fetchone()[0]
         print(id)
     except e:
         print(e)
     finally:
         conn.close() 
-
-extract_metadata("nick.mov")
+    
+    if id is not None:
+        return id
