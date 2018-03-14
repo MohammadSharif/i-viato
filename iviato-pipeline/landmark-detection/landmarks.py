@@ -2,7 +2,7 @@
 # Name:     landmarks
 # Purpose:  Given a .png image file, facial landmarks are detected and returned
 #
-# Author: Mohammad Sharif
+# Author: Mohammad Sharif - Hirad Pourtahmasbi
 #
 # -----------------------------------------------------------------------------
 import cv2
@@ -54,7 +54,7 @@ def shape_to_coord_list(shape, gray):
     converts it into a list of coordinates
     return: list of coordinates
     """
-    # Create an empty list of 70 2-tuples
+    # Create an empty list of 68 2-tuples
     coords = np.zeros((68,2), dtype="int")
     # Iterate over coords of shape and convert them into 2-tuples
     # Put the converted 2-tuples into the coords list
