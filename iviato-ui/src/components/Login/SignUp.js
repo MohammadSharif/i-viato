@@ -3,7 +3,7 @@ import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import { ToastContainer, toast, style } from 'react-toastify';
 import './SignUp.css';
-import logo from '../img/iviato.png';
+import logo from '../../img/iviato.png';
 
 const request = require('request');
 

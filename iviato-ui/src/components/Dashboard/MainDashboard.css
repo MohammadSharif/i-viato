@@ -1,0 +1,54 @@
+.maindashboard {
+  text-align: center;
+  min-height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.app-logo {
+  max-width: 125px;
+  min-width: 50px;
+}
+
+.content-div {
+  width: 85vw;
+  height: 100vh;
+  padding-top: 20px;
+  /* background-color: red; */
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: baseline;
+}
+
+.video-div {
+  width: 60%;
+  height: 100%;
+  padding-right: 20px;
+  /* background-color: blue; */
+}
+
+.uploads-div {
+  display: flex;
+  flex-direction: column;
+  align-items: baseline;
+  justify-content: baseline;
+  width: 37.5%;
+  height: 100%;
+  /* background-color: grey; */
+}
+
+.video-list {
+  height: 80vh;
+  width: 100%;
+  overflow-y: scroll;
+}
+
+.uploads-title {
+  font-weight: 400;
+  font-size: 16px;
+  margin: 10px 0;
+}

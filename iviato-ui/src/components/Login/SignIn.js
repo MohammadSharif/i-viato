@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import './SignIn.css';
-import logo from '../img/iviato.png';
+import logo from '../../img/iviato.png';
 import { ToastContainer, toast, style } from 'react-toastify';
 
 const request = require('request');
