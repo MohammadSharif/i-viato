@@ -9,20 +9,41 @@ import ExitApp from 'material-ui/svg-icons/action/exit-to-app';
 import Upload from 'material-ui/svg-icons/file/file-upload';
 import VideoContent from './VideoContent';
 import Uploads from './Uploads';
+import UploadModal from './UploadModal';
 import './MainDashboard.css';
 import logo from '../../img/iviato.png';
 class MainDashboard extends Component {
   constructor(props){
     super(props);
+    this.handleUploadMenuClick = this.handleUploadMenuClick.bind(this);
+    this.handleModalComplete = this.handleModalComplete.bind(this);
+    this.state = {
+      modal: false
+    }
   }
 
   handleClick(event){
 
   }
 
+  handleUploadMenuClick(event){
+    this.setState({modal: true})
+  }
+
+  handleModalComplete(event){
+    this.setState({modal: false})
+  }
+
   render() {
     return (
       <div className="maindashboard">
+        <UploadModal toggled={this.state.modal} onClick={() => this.handleModalComplete()}/>
+        <input
+          type="file"
+          id="imgupload"
+          ref={(ref) => this.upload = ref}
+          className="file-input"
+          accept=".png" />
         <AppBar
           title={<img src={logo} className="app-logo" alt="logo" />}
           iconElementRight={
@@ -33,7 +54,7 @@ class MainDashboard extends Component {
               targetOrigin={{horizontal: 'right', vertical: 'top'}}
               anchorOrigin={{horizontal: 'right', vertical: 'top'}}
             >
-              <MenuItem primaryText="Upload" leftIcon={<Upload/>} />
+              <MenuItem primaryText="Upload" leftIcon={<Upload/>} onClick={this.handleUploadMenuClick} />
               <MenuItem primaryText="Help" leftIcon={<Help/>}/>
               <MenuItem primaryText="Sign out" leftIcon={<ExitApp/>} />
             </IconMenu>
