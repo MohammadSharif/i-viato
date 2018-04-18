@@ -10,6 +10,9 @@ import Upload from 'material-ui/svg-icons/file/file-upload';
 import VideoContent from './VideoContent';
 import Uploads from './Uploads';
 import UploadModal from './UploadModal';
+import { Redirect } from 'react-router-dom';
+
+
 import './MainDashboard.css';
 import logo from '../../img/iviato-white.png';
 class MainDashboard extends Component {
@@ -17,6 +20,7 @@ class MainDashboard extends Component {
     super(props);
     this.handleUploadMenuClick = this.handleUploadMenuClick.bind(this);
     this.handleModalComplete = this.handleModalComplete.bind(this);
+    this.handleLogout = this.handleLogout.bind(this);
     this.state = {
       modal: false
     }
@@ -34,7 +38,14 @@ class MainDashboard extends Component {
     this.setState({modal: false})
   }
 
+  handleLogout(event) {
+    this.setState({redirect: true});
+  }
+
   render() {
+    if (this.state.redirect) {
+      return <Redirect push to="/" />;
+    }
     return (
       <div className="maindashboard">
         <UploadModal toggled={this.state.modal} onClick={() => this.handleModalComplete()}/>
@@ -56,7 +67,7 @@ class MainDashboard extends Component {
             >
               <MenuItem primaryText="Upload" leftIcon={<Upload/>} onClick={this.handleUploadMenuClick} />
               <MenuItem primaryText="Help" leftIcon={<Help/>}/>
-              <MenuItem primaryText="Sign out" leftIcon={<ExitApp/>} />
+              <MenuItem primaryText="Sign out" leftIcon={<ExitApp/>} onClick={this.handleLogout}/>
             </IconMenu>
           }
           showMenuIconButton={false}

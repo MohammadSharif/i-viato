@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import { ToastContainer, toast, style } from 'react-toastify';
+import { Redirect } from 'react-router-dom';
 
 import './SignIn.css';
 import logo from '../../img/iviato.png';
@@ -58,6 +59,7 @@ class SignIn extends Component {
         this.setState({toastId: toast.error("No password was specified.")});
       } else {
         this.attemptSignIn();
+        this.setState({redirect: true});
       }
     }
   }
@@ -97,6 +99,9 @@ class SignIn extends Component {
   }
 
   render() {
+    if (this.state.redirect) {
+      return <Redirect push to="/home" />;
+    }
     return (
       <div className="SignIn-Card">
         <ToastContainer autoClose={5000}/>
