@@ -9,7 +9,7 @@ class App extends Component {
     return (
       <MuiThemeProvider>
         <div className="App">
-          <MainDashboard />
+          <LoginScreen />
         </div>
       </MuiThemeProvider>
     );

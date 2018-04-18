@@ -11,7 +11,7 @@ import VideoContent from './VideoContent';
 import Uploads from './Uploads';
 import UploadModal from './UploadModal';
 import './MainDashboard.css';
-import logo from '../../img/iviato.png';
+import logo from '../../img/iviato-white.png';
 class MainDashboard extends Component {
   constructor(props){
     super(props);

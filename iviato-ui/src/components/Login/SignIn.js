@@ -1,14 +1,21 @@
 import React, { Component } from 'react';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
+import { ToastContainer, toast, style } from 'react-toastify';
+
 import './SignIn.css';
 import logo from '../../img/iviato.png';
-import { ToastContainer, toast, style } from 'react-toastify';
+
 
 const request = require('request');
 
 style({ colorError: "#d14545", fontFamily: "Roboto" });
 
+/**
+ * The SignIn class encapsulates all sign in functionality for the application.
+ * It handles user input as well as authentication of users.
+ * @extends Component
+ */
 class SignIn extends Component {
   constructor(props) {
     super(props);
@@ -24,10 +31,23 @@ class SignIn extends Component {
     this.attemptSignIn = this.attemptSignIn.bind(this);
   }
 
+  /**
+   * The onChange function is responsible for handling each input field.
+   * As the user types into the field, we must update the state to store
+   * the input.
+   * @param  {[type]} e User input
+   * @return {[type]}   No return value, state is altered.
+   */
   onChange(e) {
     this.setState({[e.target.name]: e.target.value })
   }
 
+  /**
+   * The onSubmit function is responsible for checking that all information
+   * was properly entered by the user.
+   * @param  {[type]} e Submit button click
+   * @return {[type]}   No return value
+   */
   onSubmit(e) {
     e.preventDefault();
     console.log(this.state);
@@ -47,6 +67,10 @@ class SignIn extends Component {
     toast.success("Successfully attempting to login.")
   }
 
+  /**
+   * Helper method to ensure that an email is actually a valid formatted email
+   * @return {[boolean]} True if valid, False otherwise
+   */
   validateEmail() {
     if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.state.username)) {
       return (true)
