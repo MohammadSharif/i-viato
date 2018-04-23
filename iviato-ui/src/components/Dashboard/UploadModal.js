@@ -5,6 +5,11 @@ import RaisedButton from 'material-ui/RaisedButton';
 
 import './UploadModal.css';
 
+/**
+ * The UploadModal class contains all necessary functionality and components
+ * for an effective modal to upload videos through.
+ * @extends Component
+ */
 class UploadModal extends Component {
   constructor(props){
     super(props);
@@ -18,15 +23,31 @@ class UploadModal extends Component {
       uploadStyle: "None"
     }
   }
-
+  /**
+   * The handleSelectClick function activates the input file selection menu.
+   * @param  {[type]} event button click
+   * @return {[type]}       window toggle
+   */
   handleSelectClick(event){
     this.upload.click()
   }
 
+  /**
+   * The handleUploadClick function is responsible for taking the file that was
+   * chosen and uploading it to our pipeline and database.
+   * @param  {[type]} event button click
+   * @return {[type]}       void
+   */
   handleUploadClick(event){
     alert("UPLOAD")
   }
 
+ /**
+  * The handleFiles function is responsible for updating the state with relevant
+  * file information after a file is chosen. We extract the filename from the
+  * full path so that it can be displayed as the selected file.
+  * @return {[type]} void
+  */
   handleFiles(){
     var file = document.getElementById('upload')
     var fileName = file.value.split(/(\\|\/)/g).pop();

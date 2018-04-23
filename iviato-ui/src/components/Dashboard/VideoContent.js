@@ -4,13 +4,14 @@ import "../../../node_modules/video-react/dist/video-react.css";
 import logo from '../../img/iviato.png';
 import { Player } from 'video-react';
 
+/**
+ * The VideoContent class encapsulates the dashboard's media player and relevant
+ * video information such as title and description.
+ * @extends Component
+ */
 class VideoContent extends Component {
   constructor(props){
     super(props);
-  }
-
-  handleClick(event){
-
   }
 
   render() {

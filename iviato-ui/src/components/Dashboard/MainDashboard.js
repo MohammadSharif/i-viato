@@ -15,6 +15,12 @@ import { Redirect } from 'react-router-dom';
 
 import './MainDashboard.css';
 import logo from '../../img/iviato-white.png';
+
+/**
+ * The MainDashboard class encapsulates all components used for the application's
+ * post login dashboard.
+ * @extends Component
+ */
 class MainDashboard extends Component {
   constructor(props){
     super(props);
@@ -26,18 +32,31 @@ class MainDashboard extends Component {
     }
   }
 
-  handleClick(event){
-
-  }
-
+  /**
+   * The handleUploadMenuClick function displays modal for uploading a file
+   * based on the upload menu item being clicked.
+   * @param  {[type]} event menu item click
+   * @return {[type]}       state change
+   */
   handleUploadMenuClick(event){
     this.setState({modal: true})
   }
 
+  /**
+   * The handleModalComplete function closes the modal.
+   * @param  {[type]} event button click
+   * @return {[type]}       state change
+   */
   handleModalComplete(event){
     this.setState({modal: false})
   }
 
+  /**
+   * The handleLogout function is responsible for signing the user out and
+   * returning to the login page.
+   * @param  {[type]} event menu item click
+   * @return {[type]}       state change
+   */
   handleLogout(event) {
     this.setState({redirect: true});
   }
