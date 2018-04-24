@@ -2,15 +2,20 @@ import React, { Component } from 'react';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import { ToastContainer, toast, style } from 'react-toastify';
+
 import './SignUp.css';
-import logo from '../img/iviato.png';
+import logo from '../../img/iviato.png';
 
 const request = require('request');
 
 style({ colorError: "#d14545", fontFamily: "Roboto" });
 
+/**
+ * The SignUp class encapsulates the functionality needed for a user to sign up
+ * to the web application. It also handles the request and validation.
+ * @extends Component
+ */
 class SignUp extends Component {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -28,11 +33,23 @@ class SignUp extends Component {
     this.attemptSignUp = this.attemptSignUp.bind(this);
   }
 
-
+  /**
+   * The onChange function is responsible for handling each input field.
+   * As the user types into the field, we must update the state to store
+   * the input.
+   * @param  {[type]} e User input
+   * @return {[type]}   No return value, state is altered.
+   */
   onChange(e) {
     this.setState({[e.target.name]: e.target.value })
   }
 
+  /**
+   * The onSubmit function is responsible for checking that all information
+   * was properly entered by the user.
+   * @param  {[type]} e Submit button click
+   * @return {[type]}   No return value
+   */
   onSubmit(e) {
     e.preventDefault();
     console.log(this.state);
@@ -74,6 +91,10 @@ class SignUp extends Component {
     toast.success("Successfully attempting user registration.");
   }
 
+  /**
+   * Helper method to ensure that an email is actually a valid formatted email
+   * @return {[boolean]} True if valid, False otherwise
+   */
   validateEmail() {
     if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.state.username)) {
       return (true)

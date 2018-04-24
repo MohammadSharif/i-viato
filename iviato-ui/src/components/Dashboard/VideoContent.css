@@ -1,0 +1,26 @@
+.videocontent {
+  text-align: center;
+  min-height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: baseline;
+  justify-content: baseline;
+  flex-direction: column;
+}
+
+.info {
+  margin: 20px 0;
+  display: flex;
+  align-items: baseline;
+  justify-content: baseline;
+  flex-direction: column;
+}
+
+.title {
+  margin: 10px 0;
+  font-weight: 400;
+}
+
+.description {
+  margin: 0;
+}
