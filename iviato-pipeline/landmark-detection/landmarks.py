@@ -14,6 +14,11 @@ import argparse
 import numpy as np
 from pupils import find_eye_center
 
+predictorPath = "./shape_predictor_68_face_landmarks.dat"
+detector = dlib.get_frontal_face_detector()
+# This is a function that we can call later on a shape
+predictor = dlib.shape_predictor(predictorPath)
+
 def rect_to_tuple(rect):
     """
     Meant to convert the dlib bounding rectangle prediction
@@ -96,58 +101,52 @@ def draw_delaunay(img, subdiv, delaunay_color) :
             cv2.line(img, pt2, pt3, delaunay_color, 1, cv2.LINE_AA, 0)
             cv2.line(img, pt3, pt1, delaunay_color, 1, cv2.LINE_AA, 0)
 
-# The following 4 lines set up our argument capabilities via commandline
-ap = argparse.ArgumentParser()
-ap.add_argument("-p", "--predictor", required=True, help="Path to landmark predictor")
-ap.add_argument("-i", "--image", required=True, help="Path to image file")
-args = vars(ap.parse_args())
 
-# We initialize the dlib face detector and create the landmark predictor
-detector = dlib.get_frontal_face_detector()
-# This is a function that we can call later on a shape
-predictor = dlib.shape_predictor(args["predictor"])
+#will detect landmarks of image draw the delauny triangles and save the image to the 
+def detectLandmarks(imgPath, imgDest):
+    # For better detection we need to get the image resizes and converted to grayscale
+    image = cv2.imread(imgPath)
+    # image = small = cv2.resize(image, (0,0), fx=0.5, fy=0.5)
+    size = image.shape
+    rect = (0, 0, size[1], size[0])
+    subdiv  = cv2.Subdiv2D(rect)
+    gray = cv2.imread(imgPath, 0)
 
-# For better detection we need to get the image resizes and converted to grayscale
-image = cv2.imread(args["image"])
-# image = small = cv2.resize(image, (0,0), fx=0.5, fy=0.5)
-size = image.shape
-rect = (0, 0, size[1], size[0])
-subdiv  = cv2.Subdiv2D(rect);
-gray = cv2.imread(args["image"], 0)
+    # We run the detection on the grayscale version of the image
+    # Notice the variable "rects" is plural this is because there may
+    # be mutliple faces detected within the image
+    rects = detector(gray, 1)
 
-# We run the detection on the grayscale version of the image
-# Notice the variable "rects" is plural this is because there may
-# be mutliple faces detected within the image
-rects = detector(gray, 1)
+    # Add each frames data to this list so we can write to db in the end
+    # Loop over all detected faces in the image
+    for i, rect in enumerate(rects):
+        # get the detections and convert them into a numpy array
+        shape = predictor(gray, rect)
+        # A list of 68 2-tuples representing facial landmark coordinates
+        shape = shape_to_coord_list(shape, gray)
+        # A list of two elements which are 2-tuples representing pupil coordinates.
+        pupils = get_pupils(shape, gray)
+        """
+        @Hirad: The shape variable above this comment contains the list of coords
+        for the facial landmark detection. That would be what needs to get pushed
+        into the DB.
 
-# Add each frames data to this list so we can write to db in the end
-# Loop over all detected faces in the image
-for i, rect in enumerate(rects):
-    # get the detections and convert them into a numpy array
-    shape = predictor(gray, rect)
-    # A list of 68 2-tuples representing facial landmark coordinates
-    shape = shape_to_coord_list(shape, gray)
-    # A list of two elements which are 2-tuples representing pupil coordinates.
-    pupils = get_pupils(shape, gray)
-    """
-    @Hirad: The shape variable above this comment contains the list of coords
-    for the facial landmark detection. That would be what needs to get pushed
-    into the DB.
+        The "pupils" variable is a list of 2 elements (each eye) the elements are
+        2-tuples representing the eye coordinates.
 
-    The "pupils" variable is a list of 2 elements (each eye) the elements are
-    2-tuples representing the eye coordinates.
+        pupils[0] == left eye (relative to user point of view of image)
+        pupils[1] == right eye (relative to user point of view of image)
+        """
+        # draw facial landmarks on the image
+        for x, y in shape:
+            print("(" + str(x) + ", " + str(y) +")")
+            cv2.circle(image, (x, y), 2, (255, 255, 255), -1)
+            subdiv.insert((x,y))
+        draw_delaunay( image, subdiv, (255, 255, 255))
 
-    pupils[0] == left eye (relative to user point of view of image)
-    pupils[1] == right eye (relative to user point of view of image)
-    """
-    # draw facial landmarks on the image
-    for x, y in shape:
-        print("(" + str(x) + ", " + str(y) +")")
-        cv2.circle(image, (x, y), 2, (255, 255, 255), -1)
-        subdiv.insert((x,y))
-    draw_delaunay( image, subdiv, (255, 255, 255))
+    # show the output image with detections and landmarks
+    image = small = cv2.resize(image, (0,0), fx=0.5, fy=0.5)
+    image.save(imgDest, "PNG")
+    #cv2.imshow("Output", image)
+    #cv2.waitKey(0)
 
-# show the output image with detections and landmarks
-image = small = cv2.resize(image, (0,0), fx=0.5, fy=0.5)
-cv2.imshow("Output", image)
-cv2.waitKey(0)
