@@ -15,7 +15,7 @@ def write_landmarks(image, shapes):
         insert = insert + tuple
 
     insert += ')'
-    print(insert)   
+    #print(insert)   
 
     conn = connect()
     cursor = conn.cursor()

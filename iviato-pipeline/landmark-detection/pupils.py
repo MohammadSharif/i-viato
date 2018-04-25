@@ -179,12 +179,12 @@ def find_eye_center(img):
     num_gradients = weight_rows * weight_cols
     out = out_sum.astype(np.float32)*(1/num_gradients)
     _, max_val, _, max_p = cv2.minMaxLoc(out)
-    print(max_p)
+    #print(max_p)
     if K_POST_PROCESSING == True:
         flood_thresh = max_val * K_THRESHOLD_VALUE
         retval, flood_clone = cv2.threshold(out, flood_thresh, 0.0, cv2.THRESH_TOZERO)
         mask = flood_kill_edges(flood_clone)
         _, max_val, _, max_p = cv2.minMaxLoc(out, mask)
-        print(max_p)
+        #print(max_p)
     x, y = unscale_point(max_p, img)
     return x,y
