@@ -8,13 +8,14 @@ import Help from 'material-ui/svg-icons/action/help-outline';
 import ExitApp from 'material-ui/svg-icons/action/exit-to-app';
 import Upload from 'material-ui/svg-icons/file/file-upload';
 import VideoContent from './VideoContent';
-import Uploads from './Uploads';
+import VideoItem from './VideoItem';
 import UploadModal from './UploadModal';
 import { Redirect } from 'react-router-dom';
 
 
 import './MainDashboard.css';
 import logo from '../../img/iviato-white.png';
+import background from '../../img/background.jpg';
 
 /**
  * The MainDashboard class encapsulates all components used for the application's
@@ -28,7 +29,27 @@ class MainDashboard extends Component {
     this.handleModalComplete = this.handleModalComplete.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
     this.state = {
-      modal: false
+      modal: false,
+      // The uploads portion of the state should contain the JSON
+      // for all of the current users uploaded videos
+      // (i.e. preview, title, duration, etc.)
+      uploads: [
+        {
+          image: background,
+          title: 'Testing Video Population',
+          duration: '0:10'
+        },
+        {
+          image: background,
+          title: 'Testing Video Population',
+          duration: '0:10'
+        },
+        {
+          image: background,
+          title: 'Testing Video Population',
+          duration: '0:10'
+        }
+      ]
     }
   }
 
@@ -59,6 +80,18 @@ class MainDashboard extends Component {
    */
   handleLogout(event) {
     this.setState({redirect: true});
+  }
+
+  createUploadsItem(upload){
+    return <VideoItem
+              videopreview={upload.image}
+              title={upload.title}
+              duration={upload.duration}
+              />;
+  }
+
+  createUploadsList(uploads){
+    return uploads.map(this.createUploadsItem);
   }
 
   render() {
@@ -101,17 +134,7 @@ class MainDashboard extends Component {
           <div className="uploads-div">
             <h6 className="uploads-title">Uploads</h6>
             <div className="video-list">
-              <Uploads />
-              <Uploads />
-              <Uploads />
-              <Uploads />
-              <Uploads />
-              <Uploads />
-              <Uploads />
-              <Uploads />
-              <Uploads />
-              <Uploads />
-              <Uploads />
+              {this.createUploadsList(this.state.uploads)}
             </div>
           </div>
         </div>
