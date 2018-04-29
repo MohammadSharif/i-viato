@@ -25,21 +25,21 @@ def execute_pipeline(srcDir, srcName):
         movieToFrames, 
         videoSrc, 
         str(metaDataDict["fps"]), 
-        srcDir + """frames%d.png"""
+        srcDir + """/frames%d.png"""
     ])
 
     # Processing
-    # for i in range(1, metaDataDict["numframes"] + 1):
-    #     detectLandmarks(srcDir + "frames" + str(i) + ".png", srcDir + "landmark" + str(i) + ".png")
+    for i in range(1, metaDataDict["numframes"] + 1):
+        detectLandmarks(srcDir + "frames" + str(i) + ".png", srcDir + "landmark" + str(i) + ".png")
 
     # Merging
-    # call([
-    #     ffmpegPath + "FFMPEGFramesToMovie", 
-    #     str(metaDataDict["fps"]), 
-    #     str(metaDataDict["width"]) + "x" + str(metaDataDict["height"]), 
-    #     str(metaDataDict["numframes"]),
-    #     srcDir + """landmark%d.png""", 
-    #     srcDir + "out-" + srcName
-    # ])
+    call([
+        framesToMovie, 
+        str(metaDataDict["fps"]), 
+        str(metaDataDict["width"]) + "x" + str(metaDataDict["height"]), 
+        str(metaDataDict["numframes"]),
+        srcDir + """landmark%d.png""", 
+        srcDir + "out-" + srcName
+    ])
 
 execute_pipeline(argv[1], argv[2])
