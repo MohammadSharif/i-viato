@@ -4,16 +4,18 @@
 #           The .png image must follow this naming pattern: 
 #           videoId_frameNumber.png
 #
-# Author: Mohammad Sharif - Hirad Pourtahmasbi
+# Author:   Mohammad Sharif - Hirad Pourtahmasbi
 #
 # -----------------------------------------------------------------------------
 import cv2
 import dlib
 import imutils
 import numpy as np
+import os
 from pupils import find_eye_center
 
-predictorPath = "./shape_predictor_68_face_landmarks.dat"
+# The path is in relative to the API code, hence we're going back up a directory
+predictorPath = os.path.abspath("../iviato-pipeline/landmark-detection/shape_predictor_68_face_landmarks.dat")
 detector = dlib.get_frontal_face_detector()
 # This is a function that we can call later on a shape
 predictor = dlib.shape_predictor(predictorPath)

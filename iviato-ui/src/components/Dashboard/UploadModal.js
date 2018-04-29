@@ -1,7 +1,8 @@
-import React, { Component } from 'react';
+import axios from 'axios';
 import IconButton from 'material-ui/IconButton';
-import Upload from 'material-ui/svg-icons/av/video-call';
+import React, { Component } from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
+import Upload from 'material-ui/svg-icons/av/video-call';
 
 import './UploadModal.css';
 
@@ -20,7 +21,8 @@ class UploadModal extends Component {
     this.state = {
       button: "Select Video",
       header: "Accepted file types: .mov, .mp4",
-      uploadStyle: "None"
+      uploadStyle: "None",
+      video: undefined
     }
   }
   /**
@@ -39,7 +41,12 @@ class UploadModal extends Component {
    * @return {[type]}       void
    */
   handleUploadClick(event){
-    alert("UPLOAD")
+    const form = new FormData()
+    form.append('file', this.state.video);
+
+    axios.post('http://localhost:8081/upload', form)
+      .then( res => console.log('Uploaded'))
+      .catch( err => console.log(err));
   }
 
  /**
@@ -49,10 +56,9 @@ class UploadModal extends Component {
   * @return {[type]} void
   */
   handleFiles(){
-    var file = document.getElementById('upload')
+    var file = document.getElementById('upload');
     var fileName = file.value.split(/(\\|\/)/g).pop();
-    this.setState({button: "Select Another", header: fileName, uploadStyle: "inline-block"})
-    console.log(file.files[0])
+    this.setState({button: "Select Another", header: fileName, uploadStyle: "inline-block", video: file.files[0]});
   }
 
   render() {
@@ -65,7 +71,7 @@ class UploadModal extends Component {
             ref={(ref) => this.upload = ref}
             onChange={this.handleFiles}
             className="file-input"
-            accept=".png" />
+            accept=".mov" />
           <h3 className="upload-header">{this.state.header}</h3>
           <RaisedButton
             className="buttons"
