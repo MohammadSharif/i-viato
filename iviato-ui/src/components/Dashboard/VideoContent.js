@@ -3,6 +3,8 @@ import './VideoContent.css';
 import "../../../node_modules/video-react/dist/video-react.css";
 import logo from '../../img/iviato.png';
 import { Player } from 'video-react';
+const path = require('path');
+
 
 /**
  * The VideoContent class encapsulates the dashboard's media player and relevant
@@ -12,15 +14,18 @@ import { Player } from 'video-react';
 class VideoContent extends Component {
   constructor(props){
     super(props);
+    var moviePath = path.resolve("../../img/nick.mov")
+    console.log(moviePath);
   }
+
 
   render() {
     return (
       <div className="videocontent">
         <Player
           playsInline
-          poster="/img/background.jpg"
-          src="https://media.w3.org/2010/05/sintel/trailer_hd.mp4"
+          poster={require("../../img/background.jpg")}
+          src={require("../../img/nick.mov")}
         />
         <div className="info">
           <h2 className="title">Video Title</h2>
