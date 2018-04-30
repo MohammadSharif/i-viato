@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './Uploads.css';
+import './VideoItem.css';
 import background from '../../img/background.jpg';
 
 /**
@@ -8,7 +8,7 @@ import background from '../../img/background.jpg';
  * as well as a query reference to load the video on click
  * @extends Component
  */
-class Uploads extends Component {
+class VideoItem extends Component {
   constructor(props){
     super(props);
   }
@@ -16,14 +16,14 @@ class Uploads extends Component {
   render() {
     return (
       <div className="feedcontent">
-        <img src={background} className="preview" />
+        <img src={this.props.videopreview} className="preview" />
         <div className="info">
-          <h6 className="video-title">Video Title Goes Here</h6>
-          <p className="duration">0:10</p>
+          <h6 className="video-title">{this.props.title}</h6>
+          <p className="duration">{this.props.duration}</p>
         </div>
       </div>
     );
   }
 }
 
-export default Uploads;
+export default VideoItem;
