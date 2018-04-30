@@ -4,16 +4,18 @@
 #           The .png image must follow this naming pattern: 
 #           videoId_frameNumber.png
 #
-# Author: Mohammad Sharif - Hirad Pourtahmasbi
+# Author:   Mohammad Sharif - Hirad Pourtahmasbi
 #
 # -----------------------------------------------------------------------------
 import cv2
 import dlib
 import imutils
 import numpy as np
+import os
 from pupils import find_eye_center
 
-predictorPath = "./shape_predictor_68_face_landmarks.dat"
+# The path is in relative to the API code, hence we're going back up a directory
+predictorPath = os.path.abspath("../iviato-pipeline/landmark-detection/shape_predictor_68_face_landmarks.dat")
 detector = dlib.get_frontal_face_detector()
 # This is a function that we can call later on a shape
 predictor = dlib.shape_predictor(predictorPath)
@@ -88,14 +90,14 @@ def rect_contains(rect, point) :
 
 # Draw delaunay triangles
 def draw_delaunay(img, subdiv, delaunay_color) :
-    triangleList = subdiv.getTriangleList();
+    triangleList = subdiv.getTriangleList()
     size = img.shape
     rect = (0, 0, size[1], size[0])
     for t in triangleList:
         pt1 = (t[0], t[1])
         pt2 = (t[2], t[3])
         pt3 = (t[4], t[5])
-        if rect_contains(rect, pt1) and rect_contains(rect, pt2) and rect_contains(rect, pt3) :
+        if rect_contains(rect, pt1) and rect_contains(rect, pt2) and rect_contains(rect, pt3):
             cv2.line(img, pt1, pt2, delaunay_color, 1, cv2.LINE_AA, 0)
             cv2.line(img, pt2, pt3, delaunay_color, 1, cv2.LINE_AA, 0)
             cv2.line(img, pt3, pt1, delaunay_color, 1, cv2.LINE_AA, 0)

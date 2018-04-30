@@ -128,7 +128,7 @@ class SignUp extends Component {
             underlineFocusStyle={{borderColor: '#4AA9F4'}}
             className="input-field"
           />
-          <h4 className="form-header">Username*</h4>
+          <h4 className="form-header">Email*</h4>
           <TextField
             value={this.state.username}
             onChange={this.onChange}

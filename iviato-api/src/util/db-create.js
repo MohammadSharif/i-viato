@@ -1,12 +1,15 @@
-const pg = require('pg')
+const config = require('config');
+const pg = require('pg');
+const dbConfig = config.get('database');
+
 
 const client = new pg.Client({
-  user: 'iviato',
-  host: 'iviato.cq5kyayqghor.us-east-2.rds.amazonaws.com',
-  database: 'iviato',
-  password: 'jini1234',
-  port: 5428,
-})
+  user: dbConfig.user,
+  host: dbConfig.host,
+  database: dbConfig.db,
+  password: dbConfig.password,
+  port: dbConfig.password,
+});
 
 // Video Metadata
 // var queryString = `CREATE TABLE videos.meta (id SERIAL PRIMARY KEY, frames INT, width INT, height INT, fps REAL)`;
