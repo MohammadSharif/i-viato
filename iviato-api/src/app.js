@@ -1,5 +1,6 @@
 const axios = require('axios');
 const bodyParser = require('body-parser');
+const config = require('config');
 const cors = require('cors');
 const exec = require('child_process').exec;
 const express = require('express');
@@ -12,6 +13,7 @@ const rimraf = require('rimraf');
 const spawn = require('child_process').spawn;
 
 const db = require('./service/db');
+const auth0 = config.get('auth0');
 
 const app = express();
 app.use(bodyParser.json());
@@ -98,7 +100,7 @@ app.get('/videos/:id', authCheck, (req, res) => {
     } else {
         res.sendStatus(400);
     }
-})
+});
 
 const server = app.listen(8081, () => {
     const host = server.address().address;
