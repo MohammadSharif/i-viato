@@ -4,6 +4,8 @@ const cors = require('cors');
 const exec = require('child_process').exec;
 const express = require('express');
 const fs = require('fs');
+const jwt = require('express-jwt');
+const jwks = require('jwks-rsa');
 const multer = require('multer');
 const path = require('path');
 const rimraf = require('rimraf');
@@ -24,6 +26,19 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
+const authCheck = jwt({
+    secret: jwks.expressJwtSecret({
+          cache: true,
+          rateLimit: true,
+          jwksRequestsPerMinute: 5,
+          // YOUR-AUTH0-DOMAIN name e.g prosper.auth0.com
+          jwksUri: "https://i-viato.auth0.com/.well-known/jwks.json"
+      }),
+      // This is the identifier we set when we created the API
+      audience: 'https://i-viato.io/api/v1/',
+      issuer: 'https://i-viato.auth0.com/',
+      algorithms: ['RS256']
+  });
 
 app.get('/', (req, res) => {
     res.send('Welecome to i-viato api!');
@@ -56,7 +71,7 @@ app.post('/login', bodyParser.json(), (req, res) => {
     }
 });
 
-app.post('/videos/upload', upload.single('file'), (req, res) => {
+app.post('/videos/upload', authCheck, upload.single('file'), (req, res) => {
     const file = req.file;
     const invokePath =  path.resolve('../iviato-pipeline/landmark-detection/pipeline.py');
     const srcDir = path.resolve('../iviato-storage/')
@@ -72,11 +87,11 @@ app.post('/videos/upload', upload.single('file'), (req, res) => {
         }
         // console.log(stdout);
         const scratchDir = path.resolve('../iviato-storage/scratchpad');
-        // rimraf(scratchDir);
+        rimraf(scratchDir + '/*.png');
     });
 });
 
-app.get('/videos/:id', (req, res) => {
+app.get('/videos/:id', authCheck, (req, res) => {
     const filePath = path.resolve(`../iviato-storage/videos/${req.params.id}.mov`);
     if (fs.existsSync(filePath)) {
         res.sendFile(filePath);
