@@ -1,7 +1,8 @@
 .DS_Store
 /.idea
 /.code
+/.vscode
 *.pyc
-i-viato-pipeline/video-metadata/nick.mov
-*.mov
 iviato-api/config/default.json
+
+iviato-storage/*
