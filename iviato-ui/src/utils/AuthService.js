@@ -1,16 +1,18 @@
+import config from 'config';
 import decode from 'jwt-decode';
 import { browserHistory } from 'react-router';
 import auth0 from 'auth0-js';
 
-const baseUrl = 'localhost:8081';
+const baseUrl = config.get('baseUrl');
+const auth0 = config.get('auth0');
 const ID_TOKEN_KEY = 'id_token';
 const ACCESS_TOKEN_KEY = 'access_token';
 
-const CLIENT_ID = '5ae737dfcbb0ee22b6c77bad';
-const CLIENT_DOMAIN = 'https://i-viato.auth0.com/';
+const CLIENT_ID = auth0.clientID;
+const CLIENT_DOMAIN = auth0.domain;
+const SCOPE = auth0.scope;
+const AUDIENCE = auth0.identifier;
 const REDIRECT = `${baseUrl}/Callback`;
-const SCOPE = 'access';
-const AUDIENCE = 'https://i-viato.io/api/v1/';
 
 var auth = new auth0.WebAuth({
   clientID: CLIENT_ID,
