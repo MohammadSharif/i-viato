@@ -4,3 +4,4 @@
 *.pyc
 i-viato-pipeline/video-metadata/nick.mov
 *.mov
+iviato-api/config/default.json
