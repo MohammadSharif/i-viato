@@ -129,7 +129,12 @@ class MainDashboard extends Component {
         />
         <div className="content-div">
           <div className="video-div">
-            <VideoContent />
+            <VideoContent
+              preview={require("../../img/background.jpg")}
+              video={require("../../img/nick.mov")}
+              video_title="Temporary Video Title Here"
+              video_info="Frame rate, resolution, other fun stuff to include"
+              />
           </div>
           <div className="uploads-div">
             <h6 className="uploads-title">Uploads</h6>
