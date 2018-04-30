@@ -1,15 +1,17 @@
+const config = require('config');
 const crypto = require('./crypto');
 const encrypt = crypto.encrypt;
 const decrypt = crypto.decrypt;
-const pg = require('pg')
+const pg = require('pg');
+const dbConfig = config.get('database');
 
 const client = new pg.Client({
-  user: 'iviato',
-  host: 'iviato.cq5kyayqghor.us-east-2.rds.amazonaws.com',
-  database: 'iviato',
-  password: 'jini1234',
-  port: 5428,
-})
+  user: dbConfig.user,
+  host: dbConfig.host,
+  database: dbConfig.db,
+  password: dbConfig.password,
+  port: dbConfig.password,
+});
 
 function signup(email, password, firstName, lastName) {
   if (!email || !password) { return false; }

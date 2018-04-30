@@ -1,9 +1,13 @@
-import React, { Component } from 'react';
+import React, { Component, Video } from 'react';
 import './VideoContent.css';
 import "../../../node_modules/video-react/dist/video-react.css";
 import logo from '../../img/iviato.png';
 import { Player } from 'video-react';
+<<<<<<< HEAD
 const path = require('path');
+=======
+import ReactVideo from 'react.video';
+>>>>>>> bd3e24e4a4891cc44bb0853afea808d9dc6b0964
 
 
 /**
@@ -14,8 +18,16 @@ const path = require('path');
 class VideoContent extends Component {
   constructor(props){
     super(props);
-    var moviePath = path.resolve("../../img/nick.mov")
-    console.log(moviePath);
+
+    this.state = {
+      videoSrc: '/Users/hirad/Dev/i-viato/iviato-storage/out-nick.mov'
+    };
+
+    console.log(this.state.videoSrc);
+  }
+
+  setSource(src) {
+    this.setState({videoSrc: src })
   }
 
 
@@ -26,6 +38,8 @@ class VideoContent extends Component {
           playsInline
           poster={require("../../img/background.jpg")}
           src={require("../../img/nick.mov")}
+          poster="/img/background.jpg"
+          src="/Users/hirad/Dev/i-viato/iviato-storage/out-nick.mov.mp4"
         />
         <div className="info">
           <h2 className="title">Video Title</h2>
