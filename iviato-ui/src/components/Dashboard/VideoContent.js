@@ -1,8 +1,10 @@
-import React, { Component } from 'react';
+import React, { Component, Video } from 'react';
 import './VideoContent.css';
 import "../../../node_modules/video-react/dist/video-react.css";
 import logo from '../../img/iviato.png';
 import { Player } from 'video-react';
+import ReactVideo from 'react.video';
+
 
 /**
  * The VideoContent class encapsulates the dashboard's media player and relevant
@@ -12,6 +14,16 @@ import { Player } from 'video-react';
 class VideoContent extends Component {
   constructor(props){
     super(props);
+
+    this.state = {
+      videoSrc: '/Users/hirad/Dev/i-viato/iviato-storage/out-nick.mov'
+    };
+
+    console.log(this.state.videoSrc);
+  }
+
+  setSource(src) {
+    this.setState({videoSrc: src })
   }
 
   render() {
@@ -20,7 +32,7 @@ class VideoContent extends Component {
         <Player
           playsInline
           poster="/img/background.jpg"
-          src="https://media.w3.org/2010/05/sintel/trailer_hd.mp4"
+          src="/Users/hirad/Dev/i-viato/iviato-storage/out-nick.mov.mp4"
         />
         <div className="info">
           <h2 className="title">Video Title</h2>

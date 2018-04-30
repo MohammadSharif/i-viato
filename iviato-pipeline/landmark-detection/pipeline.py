@@ -44,7 +44,7 @@ def execute_pipeline(srcDir, srcName):
         str(metaDataDict["width"]) + "x" + str(metaDataDict["height"]), 
         str(metaDataDict["numframes"]),
         srcDir + """/landmark%d.png""", 
-        srcDir + "/out-" + srcName
+        srcDir + "/out-" + srcName + ".mp4"
     ])
 
 execute_pipeline(argv[1], argv[2])

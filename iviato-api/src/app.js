@@ -1,15 +1,17 @@
 const axios = require('axios');
 const bodyParser = require('body-parser');
-const cors = require('cors')
+const cors = require('cors');
+const exec = require('child_process').exec;
 const express = require('express');
+const fs = require('fs');
 const multer = require('multer');
 const path = require('path');
+const rimraf = require('rimraf');
 const spawn = require('child_process').spawn;
-const exec = require('child_process').exec;
 
 const db = require('./service/db');
 
-var app = express();
+const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 app.use(cors())
@@ -29,12 +31,12 @@ app.get('/', (req, res) => {
 
 // sign-up and login
 app.post('/signup', (req, res) => {
-    var firstName = req.body.firstName;
-    var lastName = req.body.lastName;
-    var email = req.body.email;
-    var password = req.body.password;
-    console.log(req.body);
-    var result = db.signup(email, password, firstName, lastName); 
+    const firstName = req.body.firstName;
+    const lastName = req.body.lastName;
+    const email = req.body.email;
+    const password = req.body.password;
+    // console.log(req.body);
+    const result = db.signup(email, password, firstName, lastName); 
     if (result) {
         res.sendStatus(201);
     } else {
@@ -43,10 +45,10 @@ app.post('/signup', (req, res) => {
 });
 
 app.post('/login', bodyParser.json(), (req, res) => {
-    var email = req.body.email;
-    var password = req.body.password; 
+    const email = req.body.email;
+    const password = req.body.password; 
     
-    var result = db.login(email, password);
+    const result = db.login(email, password);
     if (result) {
         res.sendStatus(200);
     } else {
@@ -54,7 +56,7 @@ app.post('/login', bodyParser.json(), (req, res) => {
     }
 });
 
-app.post('/upload', upload.single('file'), (req, res) => {
+app.post('/videos/upload', upload.single('file'), (req, res) => {
     const file = req.file;
     const invokePath =  path.resolve('../iviato-pipeline/landmark-detection/pipeline.py');
     const srcDir = path.resolve('../iviato-storage/')
@@ -68,13 +70,24 @@ app.post('/upload', upload.single('file'), (req, res) => {
         if (stderr) {
             console.log(stderr)
         }
-        console.log(stdout);
+        // console.log(stdout);
+        const scratchDir = path.resolve('../iviato-storage/scratchpad');
+        // rimraf(scratchDir);
     });
 });
 
-var server = app.listen(8081, () => {
-    var host = server.address().address;
-    var port = server.address().port;
+app.get('/videos/:id', (req, res) => {
+    const filePath = path.resolve(`../iviato-storage/videos/${req.params.id}.mov`);
+    if (fs.existsSync(filePath)) {
+        res.sendFile(filePath);
+    } else {
+        res.sendStatus(400);
+    }
+})
+
+const server = app.listen(8081, () => {
+    const host = server.address().address;
+    const port = server.address().port;
    
     console.log("API listening at http://%s:%s", host, port);
 })

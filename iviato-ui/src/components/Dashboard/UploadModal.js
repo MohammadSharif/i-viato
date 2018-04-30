@@ -44,7 +44,7 @@ class UploadModal extends Component {
     const form = new FormData()
     form.append('file', this.state.video);
 
-    axios.post('http://localhost:8081/upload', form)
+    axios.post('http://localhost:8081/videos/upload', form)
       .then( res => console.log('Uploaded'))
       .catch( err => console.log(err));
   }
