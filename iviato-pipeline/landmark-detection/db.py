@@ -1,27 +1,31 @@
-import re
+import os
 import psycopg2
+import re
 
 
-def write_metaData( width, height, fps, frame_number):
+def write_metaData(userId, fileName, width, height, fps, frame_number):
     id = None
+    base = os.path.basename(fileName)
+    name = os.path.splitext(base)[0]
     conn = connect()
     cursor = conn.cursor()
     insert = """
-    INSERT INTO develop."metadata"(frames, width, height, fps) VALUES ({0}, {1}, {2}, {3} ) RETURNING id;
-    """.format(frame_number, width, height, fps)
-    print(insert)
+    INSERT INTO develop."metadata"(frames, width, height, fps, userid, filename) VALUES ({0}, {1}, {2}, {3}, {4}, '{5}') RETURNING id;
+    """.format(frame_number, width, height, fps, userId, name)
+    # print(insert)
     cursor.execute(insert)
     conn.commit()
     id = cursor.fetchone()[0]
-    print(id)
+    # print(id)
     conn.close() 
-    print(id)
+    # print(id)
     return id
+
 # image must follow the formate videoId_frameNumber.png
 # shapes is a list of tuples
 def write_landmarks(video_id, shapeList):
-    #print(insert) 
-    #print (shapeList)
+    # print(insert) 
+    # print (shapeList)
     conn = connect()
     cursor = conn.cursor()  
     for i in range(0, len(shapeList)):
@@ -34,7 +38,7 @@ def write_landmarks(video_id, shapeList):
             insert = insert + shapeTuple
 
         insert += ');'
-        #print (insert)
+        # print (insert)
         cursor.execute(insert)
     
     conn.commit()

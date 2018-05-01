@@ -7,7 +7,7 @@ import { Redirect } from 'react-router-dom';
 import './SignIn.css';
 import logo from '../../img/iviato.png';
 
-import { login } from '../../util/User';
+import { login, isAuthorized } from '../../util/User';
 
 style({ colorError: "#d14545", fontFamily: "Roboto" });
 
@@ -49,7 +49,7 @@ class SignIn extends Component {
    */
   onSubmit(e) {
     e.preventDefault();
-    console.log(this.state);
+    // console.log(this.state);
     if(!toast.isActive(this.state.toastId)){
       if (!this.validateEmail()){
         this.setState({toastId: toast.error("Please enter a valid email.")});
@@ -57,7 +57,6 @@ class SignIn extends Component {
         this.setState({toastId: toast.error("No password was specified.")});
       } else {
         this.attemptSignIn();
-        this.setState({redirect: true});
       }
     }
   }
@@ -66,6 +65,7 @@ class SignIn extends Component {
     login(this.state.username, this.state.password)
       .then(() => {
         toast.success("Login successful");
+        this.setState({redirect: true});
       })
       .catch(() => {
         toast.error("Login unsuccessful");
@@ -84,7 +84,7 @@ class SignIn extends Component {
   }
 
   render() {
-    if (this.state.redirect) {
+    if (this.state.redirect && isAuthorized().token) {
       return <Redirect push to="/home" />;
     }
     return (

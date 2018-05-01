@@ -21,7 +21,7 @@ class VideoContent extends Component {
       videoSrc: '/Users/hirad/Dev/i-viato/iviato-storage/out-nick.mov'
     };
 
-    console.log(this.state.videoSrc);
+    // console.log(this.state.videoSrc);
   }
 
   setSource(src) {

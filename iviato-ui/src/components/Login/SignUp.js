@@ -2,11 +2,12 @@ import React, { Component } from 'react';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import { ToastContainer, toast, style } from 'react-toastify';
+import { Redirect } from 'react-router-dom';
 
 import './SignUp.css';
 import logo from '../../img/iviato.png';
 
-import { signUp } from '../../util/User';
+import { signUp, isAuthorized } from '../../util/User';
 
 style({ colorError: "#d14545", fontFamily: "Roboto" });
 
@@ -70,6 +71,7 @@ class SignUp extends Component {
     signUp(this.state.firstname, this.state.lastname, this.state.username, this.state.password)
       .then(() => {
         toast.success("Successfully attempting user registration.");
+        this.setState({redirect: true});
       })
       .catch(() => {
         toast.error("Unable to sign up");
@@ -88,6 +90,10 @@ class SignUp extends Component {
   }
 
   render() {
+    if (this.state.redirect && isAuthorized().token) {
+      return <Redirect push to="/home" />;
+    }
+
     return (
       <div className="SignUp-Card">
         <img src={logo} className="iviato-header" alt="logo" />
