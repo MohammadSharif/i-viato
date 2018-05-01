@@ -1,13 +1,17 @@
-import re
+import os
 import psycopg2
+import re
 
-def write_metaData(userId, name, width, height, fps, frame_number):
+
+def write_metaData(userId, fileName, width, height, fps, frame_number):
     id = None
+    base = os.path.basename(fileName)
+    name = os.path.splitext(base)[0]
     conn = connect()
     cursor = conn.cursor()
     insert = """
-    INSERT INTO develop."metadata"(userId, name, frames, width, height, fps) VALUES ({0}, {1}, {2}, {3}, {4}, {5}) RETURNING id;
-    """.format(userId, name, frame_number, width, height, fps)
+    INSERT INTO develop."metadata"(frames, width, height, fps, userid, filename) VALUES ({0}, {1}, {2}, {3}, {4}, '{5}') RETURNING id;
+    """.format(frame_number, width, height, fps, userId, name)
     # print(insert)
     cursor.execute(insert)
     conn.commit()

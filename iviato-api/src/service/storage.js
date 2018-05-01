@@ -26,16 +26,15 @@ module.exports.store = async (userId, filePath) => {
         return;
       }
         console.log('Uploaded processed video');
-        console.log(data);
+        // console.log(data);
 
         const videoUrl = `https://s3.${S3_CONFIG.region}.amazonaws.com/${S3_CONFIG.bucket}/${key}`;
         await videoUpload(userId, fileName, videoUrl);
-        const scratchDir = path.resolve('../../iviato-storage/');
-        console.log(data);
-        rimraf(scratchDir, () => {
-          console.log('Deleting temporary file.')
-          fs.mkdirSync(scratchDir);
-        });
+        const scratchDir = path.resolve('../iviato-storage/');
+        // rimraf(scratchDir, () => {
+        //   console.log('Deleting temporary file.')
+        //   fs.mkdirSync(scratchDir);
+        // });
     });
   });
 };

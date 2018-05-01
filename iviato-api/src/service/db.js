@@ -27,7 +27,7 @@ module.exports.signup = async (first, last, email, password) => {
     console.log('Created user');
     const id = user.rows[0].id;
     
-    query = `CREATE TABLE videos.videos${id} (name TEXT, location TEXT)`;
+    query = `CREATE TABLE videos.videos${id} (filename TEXT, url TEXT)`;
     try {
       const table = await client.query(query);
       console.log('Created user table');
@@ -70,13 +70,14 @@ module.exports.login = async (email, password) => {
     }
   } catch(error) {
     console.log('Unable to create');
-    console.log(err);
+    console.log(error);
     client.end();
   }
   client.end();
 };
 
 module.exports.videoUpload = async (id, name, videoUrl) => {
+  console.log()
   const client = new pg.Client({
     user: dbConfig.user,
     host: dbConfig.host,
@@ -87,15 +88,17 @@ module.exports.videoUpload = async (id, name, videoUrl) => {
 
   client.connect();
   console.log('connected to postgres');
-  const query = `INSERT INTO videos."videos${id}"(name, location) VALUES ($1, $2)`;
+  const query = `INSERT INTO videos.videos${id}(filename, url) VALUES ($1, $2)`;
   const values = [name, videoUrl];
-
+  console.log(query);
   try {
-    const upload = client.query(query, values);
+    const upload = await client.query(query, values);
+    console.log(upload);
     console.log('Uploaded video location');
     client.end();
   } catch (error) {
     console.log('Unable to upload video location');
+    console.log(error);
     client.end();
   }
 };

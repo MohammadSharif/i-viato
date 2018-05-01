@@ -86,7 +86,11 @@ app.post('/login', async (req, res) => {
   }
 });
 
+// upload video
 app.post('/videos/upload/:id', [authCheck, upload.single('file')], (req, res) => {
+  
+  console.log(req);
+  console.log('***************************** Uploading *****************************');
   const id = req.params.id;
 
   const file = req.file;

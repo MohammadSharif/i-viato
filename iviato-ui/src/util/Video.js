@@ -14,7 +14,8 @@ export function upload(file) {
 
   axios.post(api.base + api.upload + `/${authorization.id}`, form, {
     headers: {
-      'authorization': token
+      'authorization': token,
+      'Access-Control-Allow-Origin': '*'
     }
   })
     .then((res) => {
