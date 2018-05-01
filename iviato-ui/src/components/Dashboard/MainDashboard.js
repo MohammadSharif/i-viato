@@ -17,6 +17,8 @@ import './MainDashboard.css';
 import logo from '../../img/iviato-white.png';
 import background from '../../img/background.jpg';
 
+import { isAuthorized } from '../../util/User';
+
 /**
  * The MainDashboard class encapsulates all components used for the application's
  * post login dashboard.
@@ -95,6 +97,11 @@ class MainDashboard extends Component {
   }
 
   render() {
+    if (!isAuthorized()) {
+      console.log('Not Authorized');
+      return <Redirect to="/" />;
+    }
+
     if (this.state.redirect) {
       return <Redirect push to="/" />;
     }
