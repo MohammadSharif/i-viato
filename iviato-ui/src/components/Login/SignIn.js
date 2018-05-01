@@ -7,8 +7,7 @@ import { Redirect } from 'react-router-dom';
 import './SignIn.css';
 import logo from '../../img/iviato.png';
 
-
-const request = require('request');
+import { login } from '../../util/User';
 
 style({ colorError: "#d14545", fontFamily: "Roboto" });
 
@@ -25,7 +24,6 @@ class SignIn extends Component {
       password: '',
       toastId: null
     }
-
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.validateEmail = this.validateEmail.bind(this);
@@ -65,8 +63,13 @@ class SignIn extends Component {
   }
 
   attemptSignIn(){
-    this.postSignIn();
-    toast.success("Successfully attempting to login.")
+    login(this.state.username, this.state.password)
+      .then(() => {
+        toast.success("Login successful");
+      })
+      .catch(() => {
+        toast.error("Login unsuccessful");
+      });
   }
 
   /**
@@ -78,24 +81,6 @@ class SignIn extends Component {
       return (true)
     }
     return (false)
-  }
-
-  postSignIn = async () => {
-    const headers = new Headers()
-    headers.append('Content-type', 'application/json');
-
-    const options = {
-      url: 'http://localhost:8081/login',
-      headers: headers,
-      form: {
-        'email': `${this.state.username}`,
-        'password': `${this.state.password}`
-      }
-    };
-
-    request.post(options, (res) => {
-      console.log(res);
-    });
   }
 
   render() {

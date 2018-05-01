@@ -6,7 +6,7 @@ import { ToastContainer, toast, style } from 'react-toastify';
 import './SignUp.css';
 import logo from '../../img/iviato.png';
 
-const request = require('request');
+import { signUp } from '../../util/User';
 
 style({ colorError: "#d14545", fontFamily: "Roboto" });
 
@@ -41,7 +41,7 @@ class SignUp extends Component {
    * @return {[type]}   No return value, state is altered.
    */
   onChange(e) {
-    this.setState({[e.target.name]: e.target.value })
+    this.setState({ [e.target.name]: e.target.value })
   }
 
   /**
@@ -52,43 +52,28 @@ class SignUp extends Component {
    */
   onSubmit(e) {
     e.preventDefault();
-    console.log(this.state);
-    if(!toast.isActive(this.state.toastId)){
-      if (!this.validateEmail()){
-        this.setState({toastId: toast.error("Please enter a valid email.")});
-      } else if(this.state.password === ''){
-        this.setState({toastId: toast.error("No password was specified.")});
-      } else if(this.state.password !== this.state.confirmed){
-        this.setState({toastId: toast.error("The passwords do not match.")});
+    // console.log(this.state);
+    if (!toast.isActive(this.state.toastId)) {
+      if (!this.validateEmail()) {
+        this.setState({ toastId: toast.error("Please enter a valid email.") });
+      } else if (this.state.password === '') {
+        this.setState({ toastId: toast.error("No password was specified.") });
+      } else if (this.state.password !== this.state.confirmed) {
+        this.setState({ toastId: toast.error("The passwords do not match.") });
       } else {
         this.attemptSignUp();
       }
     }
   }
 
-  postSignUp = async () => {
-    const headers = new Headers()
-    headers.append('Content-type', 'application/json');
-
-    const options = {
-      url: 'http://localhost:8081/signup',
-      headers: headers,
-      form: {
-        'firstName': `${this.state.firstname}`,
-        'lastName': `${this.state.lastname}`,
-        'email': `${this.state.username}`,
-        'password': `${this.state.password}`
-      }
-    };
-
-    request.post(options, (res) => {
-      console.log(res);
-    });
-  }
-
-  attemptSignUp(){
-    this.postSignUp();
-    toast.success("Successfully attempting user registration.");
+  attemptSignUp() {
+    signUp(this.state.firstname, this.state.lastname, this.state.username, this.state.password)
+      .then(() => {
+        toast.success("Successfully attempting user registration.");
+      })
+      .catch(() => {
+        toast.error("Unable to sign up");
+      });
   }
 
   /**
@@ -106,7 +91,7 @@ class SignUp extends Component {
     return (
       <div className="SignUp-Card">
         <img src={logo} className="iviato-header" alt="logo" />
-        <ToastContainer autoClose={5000}/>
+        <ToastContainer autoClose={5000} />
         <div className="input-fields">
           <h4 className="form-header">First Name</h4>
           <TextField
@@ -115,7 +100,7 @@ class SignUp extends Component {
             hintText='Johnny'
             type="text"
             name="firstname"
-            underlineFocusStyle={{borderColor: '#4AA9F4'}}
+            underlineFocusStyle={{ borderColor: '#4AA9F4' }}
             className="input-field"
           />
           <h4 className="form-header">Last Name</h4>
@@ -125,7 +110,7 @@ class SignUp extends Component {
             hintText="Appleseed"
             type="text"
             name="lastname"
-            underlineFocusStyle={{borderColor: '#4AA9F4'}}
+            underlineFocusStyle={{ borderColor: '#4AA9F4' }}
             className="input-field"
           />
           <h4 className="form-header">Email*</h4>
@@ -135,7 +120,7 @@ class SignUp extends Component {
             hintText="email@sjsu.edu"
             type="email"
             name="username"
-            underlineFocusStyle={{borderColor: '#4AA9F4'}}
+            underlineFocusStyle={{ borderColor: '#4AA9F4' }}
             className="input-field"
           />
           <h4 className="form-header">Password*</h4>
@@ -145,7 +130,7 @@ class SignUp extends Component {
             hintText="Password"
             type="password"
             name="password"
-            underlineFocusStyle={{borderColor: '#4AA9F4'}}
+            underlineFocusStyle={{ borderColor: '#4AA9F4' }}
             className="input-field"
           />
           <h4 className="form-header">Confirm Password*</h4>
@@ -155,7 +140,7 @@ class SignUp extends Component {
             hintText="Confirm Password"
             type="password"
             name="confirmed"
-            underlineFocusStyle={{borderColor: '#4AA9F4'}}
+            underlineFocusStyle={{ borderColor: '#4AA9F4' }}
             className="input-field"
           />
         </div>
@@ -164,14 +149,14 @@ class SignUp extends Component {
             label="Cancel"
             backgroundColor='#9ca8bc'
             labelColor='#FFFFFF'
-            style={{width: "40%"}}
-            onClick={() => this.props.onClick()}/>
+            style={{ width: "40%" }}
+            onClick={() => this.props.onClick()} />
           <RaisedButton
             label="Sign Up"
             backgroundColor='#4AA9F4'
             labelColor='#FFFFFF'
-            style={{width: "40%"}}
-            onClick={this.onSubmit}/>
+            style={{ width: "40%" }}
+            onClick={this.onSubmit} />
         </div>
       </div>
     );
