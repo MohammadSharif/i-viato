@@ -13,7 +13,7 @@ class App extends Component {
         <Router>
           <div className="App">
             <Route exact path="/" component={LoginScreen} />
-            <Route path="/home" component={MainDashboard}/>
+            <Route path="/home" component={MainDashboard} />
           </div>
         </Router>
       </MuiThemeProvider>
