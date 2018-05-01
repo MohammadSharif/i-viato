@@ -62,17 +62,16 @@ module.exports.login = async (email, password) => {
   const query = `SELECT * FROM develop.userdata WHERE "email"='${email}' AND "password"='${password}'`;
   
   try {
-    const res = await client.query(query);
-    if (res.rows[0]) {
+    const user = await client.query(query);
+    if (user) {
       console.log('Found user');
       client.end()      
-      return true; 
+      return user.rows[0].id; 
     }
   } catch(error) {
     console.log('Unable to create');
     console.log(err);
     client.end();
-    return false;
   }
   client.end();
 };

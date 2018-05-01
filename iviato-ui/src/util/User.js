@@ -20,7 +20,6 @@ export async function signUp(first, last, email, password) {
 
   try {
     const response = await request(options);
-    console.log(response);
     storeToken(JSON.parse(response));
     return true;
   } catch (error) {
@@ -45,13 +44,18 @@ export async function login(email, password) {
 
   try {
     const response = await request(options);
-    storeToken(response);
+    console.log(response)
+    storeToken(JSON.parse(response));
     return true;
   } catch (error) {
     console.log(`-----Error: ${error}`);
     return false;
   }
 };
+
+export function logout() {
+  localStorage.clear();
+}
 
 // @Todo: Add timeout and whatnot
 export function isAuthorized() {

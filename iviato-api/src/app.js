@@ -72,11 +72,15 @@ app.post('/login', async (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
 
-  const result = await db.login(email, password);
-  if (result) {
-    let auth = await authorize();
+  const id = await db.login(email, password);
+  const auth = await authorize();
+  if (id) {
+    let body = {
+      token: auth,
+      id: id,
+    };
     res.statusCode = 200;
-    res.send(auth);
+    res.send(body);
   } else {
     res.sendStatus(400);
   }
