@@ -3,11 +3,9 @@ import './VideoContent.css';
 import "../../../node_modules/video-react/dist/video-react.css";
 import logo from '../../img/iviato.png';
 import { Player } from 'video-react';
-<<<<<<< HEAD
-const path = require('path');
-=======
 import ReactVideo from 'react.video';
->>>>>>> bd3e24e4a4891cc44bb0853afea808d9dc6b0964
+
+const path = require('path');
 
 
 /**
@@ -36,8 +34,8 @@ class VideoContent extends Component {
       <div className="videocontent">
         <Player
           playsInline
-          poster={require("../../img/background.jpg")}
-          src={require("../../img/nick.mov")}
+          // poster={require("../../img/background.jpg")}
+          // src={require("../../img/nick.mov")}
           poster="/img/background.jpg"
           src="/Users/hirad/Dev/i-viato/iviato-storage/out-nick.mov.mp4"
         />
