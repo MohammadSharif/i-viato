@@ -20,14 +20,14 @@ module.exports.signup = async (first, last, email, password) => {
   client.connect();
   console.log('connected to postgres');
   let query = 'INSERT INTO develop.userdata(first, last, email, password) VALUES ($1, $2, $3, $4) RETURNING *';
-  const values = [first, last, email, password];
+  let values = [first, last, email, password];
 
   try {
     const user = await client.query(query, values);
     console.log('Created user');
     const id = user.rows[0].id;
     
-    query = `CREATE TABLE videos.videos${id} (userId INT, name TEXT, location TEXT)`;
+    query = `CREATE TABLE videos.videos${id} (name TEXT, location TEXT)`;
     try {
       const table = await client.query(query);
       console.log('Created user table');
@@ -36,12 +36,12 @@ module.exports.signup = async (first, last, email, password) => {
       console.log(err);
     }
     client.end();
-    return true;
+    return id;
   } catch (err) {
     console.log('Unable to create user');
     console.log(err);
     client.end();
-    return false;
+    return;
   }
   client.end();
 }
@@ -75,4 +75,28 @@ module.exports.login = async (email, password) => {
     return false;
   }
   client.end();
+};
+
+module.exports.videoUpload = async (id, name, videoUrl) => {
+  const client = new pg.Client({
+    user: dbConfig.user,
+    host: dbConfig.host,
+    database: dbConfig.db,
+    password: dbConfig.password,
+    port: dbConfig.port,
+  });
+
+  client.connect();
+  console.log('connected to postgres');
+  const query = `INSERT INTO videos."videos${id}"(name, location) VALUES ($1, $2)`;
+  const values = [name, videoUrl];
+
+  try {
+    const upload = client.query(query, values);
+    console.log('Uploaded video location');
+    client.end();
+  } catch (error) {
+    console.log('Unable to upload video location');
+    client.end();
+  }
 };

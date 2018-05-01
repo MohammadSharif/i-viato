@@ -54,11 +54,15 @@ app.post('/signup', async (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
   
-  const result = await db.signup(first, last, email, password);
-  if (result) {
+  const id = await db.signup(first, last, email, password);
+  if (id) {
     let auth = await authorize();
+    let body = {
+      token: auth,
+      id: id,
+    };
     res.statusCode = 201;
-    res.send(auth);
+    res.send(body);
   } else {
     res.sendStatus(400);
   }
@@ -78,14 +82,15 @@ app.post('/login', async (req, res) => {
   }
 });
 
-app.post('/videos/upload', [authCheck, upload.single('file')], (req, res) => {
-  console.log(req.body);
+app.post('/videos/upload/:id', [authCheck, upload.single('file')], (req, res) => {
+  const id = req.params.id;
+
   const file = req.file;
   const invokePath = path.resolve('../iviato-pipeline/landmark-detection/pipeline.py');
   const srcDir = path.resolve('../iviato-storage/')
   const srcName = file.originalname;
 
-  exec(`python3 ${invokePath} ${srcDir} ${srcName}`,
+  exec(`python3 ${invokePath} ${id} ${srcDir} ${srcName}`,
     (error, stdout, stderr) => {
       if (error) {
         console.log(error)
@@ -93,26 +98,9 @@ app.post('/videos/upload', [authCheck, upload.single('file')], (req, res) => {
       if (stderr) {
         console.log(stderr)
       }
-      // console.log(stdout);
-      const scratchDir = path.resolve('../iviato-storage/');
-      console.log(scratchDir);
-      store('demo', `${path.resolve('../iviato-storage/')}/out-${srcName}.mp4`);
-      rimraf(scratchDir, () => {
-        console.log('Deleting temporary file.')
-        fs.mkdirSync(scratchDir);
-      });
+      console.log(stdout);
+      store(id, `${path.resolve('../iviato-storage/')}/out-${srcName}`);
     });
-
-   
-});
-
-app.get('/videos/:id', authCheck, (req, res) => {
-  const filePath = path.resolve(`../iviato-storage/videos/${req.params.id}.mov`);
-  if (fs.existsSync(filePath)) {
-    res.sendFile(filePath);
-  } else {
-    res.sendStatus(400);
-  }
 });
 
 const server = app.listen(8081, () => {
