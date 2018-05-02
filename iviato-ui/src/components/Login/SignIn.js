@@ -7,8 +7,7 @@ import { Redirect } from 'react-router-dom';
 import './SignIn.css';
 import logo from '../../img/iviato.png';
 
-
-const request = require('request');
+import { login, isAuthorized } from '../../util/User';
 
 style({ colorError: "#d14545", fontFamily: "Roboto" });
 
@@ -25,7 +24,6 @@ class SignIn extends Component {
       password: '',
       toastId: null
     }
-
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.validateEmail = this.validateEmail.bind(this);
@@ -51,7 +49,7 @@ class SignIn extends Component {
    */
   onSubmit(e) {
     e.preventDefault();
-    console.log(this.state);
+    // console.log(this.state);
     if(!toast.isActive(this.state.toastId)){
       if (!this.validateEmail()){
         this.setState({toastId: toast.error("Please enter a valid email.")});
@@ -59,14 +57,19 @@ class SignIn extends Component {
         this.setState({toastId: toast.error("No password was specified.")});
       } else {
         this.attemptSignIn();
-        this.setState({redirect: true});
       }
     }
   }
 
   attemptSignIn(){
-    this.postSignIn();
-    toast.success("Successfully attempting to login.")
+    login(this.state.username, this.state.password)
+      .then(() => {
+        toast.success("Login successful");
+        this.setState({redirect: true});
+      })
+      .catch(() => {
+        toast.error("Login unsuccessful");
+      });
   }
 
   /**
@@ -80,26 +83,8 @@ class SignIn extends Component {
     return (false)
   }
 
-  postSignIn = async () => {
-    const headers = new Headers()
-    headers.append('Content-type', 'application/json');
-
-    const options = {
-      url: 'http://localhost:8081/login',
-      headers: headers,
-      form: {
-        'email': `${this.state.username}`,
-        'password': `${this.state.password}`
-      }
-    };
-
-    request.post(options, (res) => {
-      console.log(res);
-    });
-  }
-
   render() {
-    if (this.state.redirect) {
+    if (this.state.redirect && isAuthorized().token) {
       return <Redirect push to="/home" />;
     }
     return (

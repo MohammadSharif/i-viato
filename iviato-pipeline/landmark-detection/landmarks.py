@@ -16,6 +16,9 @@ from pupils import find_eye_center
 
 # The path is in relative to the API code, hence we're going back up a directory
 predictorPath = os.path.abspath("../iviato-pipeline/landmark-detection/shape_predictor_68_face_landmarks.dat")
+#Didnt work on my machine so i took out the origional iviato-pipeline because we are already in that dir
+#predictorPath = os.path.abspath("../landmark-detection/shape_predictor_68_face_landmarks.dat")
+
 detector = dlib.get_frontal_face_detector()
 # This is a function that we can call later on a shape
 predictor = dlib.shape_predictor(predictorPath)
@@ -120,6 +123,7 @@ def detectLandmarks(imgPath, imgDest):
 
     # Add each frames data to this list so we can write to db in the end
     # Loop over all detected faces in the image
+
     for i, rect in enumerate(rects):
         # get the detections and convert them into a numpy array
         shape = predictor(gray, rect)
@@ -150,4 +154,5 @@ def detectLandmarks(imgPath, imgDest):
     cv2.imwrite(imgDest, image)
     #cv2.imshow("Output", image)
     #cv2.waitKey(0)
+    return {"shape":shape, "pupils":pupils}
 

@@ -17,6 +17,8 @@ import './MainDashboard.css';
 import logo from '../../img/iviato-white.png';
 import background from '../../img/background.jpg';
 
+import { isAuthorized, logout } from '../../util/User';
+
 /**
  * The MainDashboard class encapsulates all components used for the application's
  * post login dashboard.
@@ -80,7 +82,8 @@ class MainDashboard extends Component {
    * @return {[type]}       state change
    */
   handleLogout(event) {
-    this.setState({redirect: true});
+    logout();
+    this.setState({ redirect: true });
   }
 
   createUploadsItem(upload){
@@ -134,53 +137,59 @@ class MainDashboard extends Component {
     if (this.state.redirect) {
       return <Redirect push to="/" />;
     }
-    return (
-      <div className="maindashboard">
-        <UploadModal toggled={this.state.modal} onClick={() => this.handleModalComplete()}/>
-        <input
-          type="file"
-          id="imgupload"
-          ref={(ref) => this.upload = ref}
-          className="file-input"
-          accept=".png" />
-        <AppBar
-          title={<img src={logo} className="app-logo" alt="logo" />}
-          iconElementRight={
-            <IconMenu
-              iconButtonElement={
-                <IconButton><MoreVertIcon /></IconButton>
-              }
-              targetOrigin={{horizontal: 'right', vertical: 'top'}}
-              anchorOrigin={{horizontal: 'right', vertical: 'top'}}
-            >
-              <MenuItem primaryText="Upload" leftIcon={<Upload/>} onClick={this.handleUploadMenuClick} />
-              <MenuItem primaryText="Help" leftIcon={<Help/>}/>
-              <MenuItem primaryText="Sign out" leftIcon={<ExitApp/>} onClick={this.handleLogout}/>
-            </IconMenu>
-          }
-          showMenuIconButton={false}
-          style={{
-            backgroundColor: '#4AA9F4',
-          }}
-        />
-        <div className="content-div">
-          <div className="video-div">
-            <VideoContent
-              preview={this.captureVideoFrame(require("../../img/nick.mov"), 'png')}
-              video={require("../../img/nick.mov")}
-              video_title="Temporary Video Title Here"
-              video_info="Frame rate, resolution, other fun stuff to include"
-              />
-          </div>
-          <div className="uploads-div">
-            <h6 className="uploads-title">Uploads</h6>
-            <div className="video-list">
-              {this.createUploadsList(this.state.uploads)}
+
+    if (isAuthorized().token) {
+      return (
+        <div className="maindashboard">
+          <UploadModal toggled={this.state.modal} onClick={() => this.handleModalComplete()}/>
+          <input
+            type="file"
+            id="imgupload"
+            ref={(ref) => this.upload = ref}
+            className="file-input"
+            accept=".png" />
+          <AppBar
+            title={<img src={logo} className="app-logo" alt="logo" />}
+            iconElementRight={
+              <IconMenu
+                iconButtonElement={
+                  <IconButton><MoreVertIcon /></IconButton>
+                }
+                targetOrigin={{horizontal: 'right', vertical: 'top'}}
+                anchorOrigin={{horizontal: 'right', vertical: 'top'}}
+              >
+                <MenuItem primaryText="Upload" leftIcon={<Upload/>} onClick={this.handleUploadMenuClick} />
+                <MenuItem primaryText="Help" leftIcon={<Help/>}/>
+                <MenuItem primaryText="Sign out" leftIcon={<ExitApp/>} onClick={this.handleLogout}/>
+              </IconMenu>
+            }
+            showMenuIconButton={false}
+            style={{
+              backgroundColor: '#4AA9F4',
+            }}
+          />
+          <div className="content-div">
+            <div className="video-div">
+              <VideoContent 
+                preview={this.captureVideoFrame(require("../../img/nick.mov"), 'png')}
+                video={require("../../img/nick.mov")}
+                video_title="Temporary Video Title Here"
+                video_info="Frame rate, resolution, other fun stuff to include"
+                />
+            </div>
+            <div className="uploads-div">
+              <h6 className="uploads-title">Uploads</h6>
+              <div className="video-list">
+                {this.createUploadsList(this.state.uploads)}
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    );
+      );
+    } else {
+      console.log('Not Authorized');
+      return <Redirect to="/" />;
+    }
   }
 }
 

@@ -9,19 +9,22 @@ from sys import argv
 from landmarks import detectLandmarks
 from subprocess import call
 from metadata import extract_metadata
-
+from db import write_metaData
+from db import write_landmarks
+from db import write_pupils
 movieToFrames = os.path.abspath('../iviato-pipeline/ffmpeg/FFMPEGMovieToFrames')
 framesToMovie = os.path.abspath('../iviato-pipeline/ffmpeg/FFMPEGFramesToMovie')
 
-def execute_pipeline(srcDir, srcName):
+def execute_pipeline(userId, srcDir, srcName):
     """
     does the whole pipeline, takes in src directory and name, will put resulting video in same place with "out-' appended to the front of the filename
     """
+    print(f'{userId} - {srcDir} - {srcName}')
     videoSrc = srcDir + '/' + srcName 
     metaDataDict = extract_metadata(videoSrc)
     
     # Splitting up 
-    print("Starting splitting up...")
+    #print("Starting splitting up...")
     call([
         movieToFrames, 
         videoSrc, 
@@ -30,11 +33,16 @@ def execute_pipeline(srcDir, srcName):
     ])
 
     # Processing
+    
+    shapePoints = []
+    pupilPoints = []
     print("Starting landmark detection...")
     for i in range(1, metaDataDict["numframes"] + 1):
         imgPath = srcDir + "/frames" + str(i) + ".png"
         imgDest = srcDir + "/landmark" + str(i) + ".png"
-        detectLandmarks(imgPath, imgDest)
+        tempDict = detectLandmarks(imgPath, imgDest)
+        shapePoints.append(tempDict["shape"])
+        pupilPoints.append(tempDict["pupils"])
 
     # Merging
     print("Starting stiching up...")
@@ -46,5 +54,20 @@ def execute_pipeline(srcDir, srcName):
         srcDir + """/landmark%d.png""", 
         srcDir + "/out-" + srcName + ".mp4"
     ])
+    #print("********************** shape **********************")
+    #print (shapePoints)
+    #print("********************** pupil **********************")
+    #print (pupilPoints)
+    video_id = write_metaData(
+        userId, 
+        srcName,
+        metaDataDict["width"], 
+        metaDataDict["height"], 
+        metaDataDict["fps"], 
+        metaDataDict["numframes"]
+    )
+    write_pupils(video_id, pupilPoints)
+    write_landmarks(video_id, shapePoints)
+    
 
-execute_pipeline(argv[1], argv[2])
+execute_pipeline(argv[1], argv[2], argv[3])

@@ -6,6 +6,8 @@ import Upload from 'material-ui/svg-icons/av/video-call';
 
 import './UploadModal.css';
 
+import { upload } from '../../util/Video';
+
 /**
  * The UploadModal class contains all necessary functionality and components
  * for an effective modal to upload videos through.
@@ -42,13 +44,7 @@ class UploadModal extends Component {
    * @return {[type]}       void
    */
   handleUploadClick(event){
-    const form = new FormData()
-    form.append('file', this.state.video);
-
-    axios.post('http://localhost:8081/videos/upload', form)
-      .then( res => console.log('Uploaded'))
-      .catch( err => console.log(err));
-
+    upload(this.state.video);
     this.resetModal()
   }
 
