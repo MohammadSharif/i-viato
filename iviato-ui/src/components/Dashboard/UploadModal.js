@@ -19,6 +19,7 @@ class UploadModal extends Component {
     this.handleSelectClick = this.handleSelectClick.bind(this);
     this.handleUploadClick = this.handleUploadClick.bind(this);
     this.handleFiles = this.handleFiles.bind(this);
+    this.resetModal = this.resetModal.bind(this);
 
     this.state = {
       button: "Select Video",
@@ -44,6 +45,7 @@ class UploadModal extends Component {
    */
   handleUploadClick(event){
     upload(this.state.video);
+    this.resetModal()
   }
 
  /**
@@ -56,6 +58,12 @@ class UploadModal extends Component {
     var file = document.getElementById('upload');
     var fileName = file.value.split(/(\\|\/)/g).pop();
     this.setState({button: "Select Another", header: fileName, uploadStyle: "inline-block", video: file.files[0]});
+  }
+
+  resetModal(event){
+    this.setState({button: "Select Video", header: "Accepted file types: .mov, .mp4", uploadStyle: "None", video: undefined})
+    document.getElementById('upload').value = ''
+    this.props.onClick()
   }
 
   render() {
@@ -92,7 +100,7 @@ class UploadModal extends Component {
             backgroundColor='#9ca8bc'
             labelColor='#FFFFFF'
             style={{width: "80%"}}
-            onClick={() => this.props.onClick()}/>
+            onClick={this.resetModal}/>
         </div>
       </div>
     );
