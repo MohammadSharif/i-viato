@@ -33,13 +33,13 @@ module.exports.signup = async (first, last, email, password) => {
       console.log('Created user table');
     } catch (err) {
       console.log('Unable to create table');
-      console.log(err);
+      // console.log(err);
     }
     client.end();
     return id;
   } catch (err) {
     console.log('Unable to create user');
-    console.log(err);
+    // console.log(err);
     client.end();
     return;
   }
@@ -69,7 +69,7 @@ module.exports.login = async (email, password) => {
       return user.rows[0].id; 
     }
   } catch(error) {
-    console.log('Unable to create');
+    console.log('Unable to find user');
     console.log(error);
     client.end();
   }
@@ -77,7 +77,6 @@ module.exports.login = async (email, password) => {
 };
 
 module.exports.videoUpload = async (id, name, videoUrl) => {
-  console.log()
   const client = new pg.Client({
     user: dbConfig.user,
     host: dbConfig.host,
@@ -90,14 +89,37 @@ module.exports.videoUpload = async (id, name, videoUrl) => {
   console.log('connected to postgres');
   const query = `INSERT INTO videos.videos${id}(filename, url) VALUES ($1, $2)`;
   const values = [name, videoUrl];
-  console.log(query);
+  // console.log(query);
   try {
     const upload = await client.query(query, values);
-    console.log(upload);
+    // console.log(upload);
     console.log('Uploaded video location');
     client.end();
   } catch (error) {
     console.log('Unable to upload video location');
+    // console.log(error);
+    client.end();
+  }
+};
+
+module.exports.listVideos = async (id) => {
+  const client = new pg.Client({
+    user: dbConfig.user,
+    host: dbConfig.host,
+    database: dbConfig.db,
+    password: dbConfig.password,
+    port: dbConfig.port,
+  });
+
+  client.connect();
+  console.log('connected to postgres');
+  const query = `SELECT * FROM videos.videos${id}`; 
+
+  try {
+    const videos = await client.query(query);
+    client.end();
+    return videos.rows;
+  } catch (error) {
     console.log(error);
     client.end();
   }

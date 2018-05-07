@@ -51,7 +51,7 @@ def execute_pipeline(userId, srcDir, srcName):
         str(metaDataDict["width"]) + "x" + str(metaDataDict["height"]), 
         str(metaDataDict["numframes"]),
         srcDir + """/landmark%d.png""", 
-        srcDir + "/out-" + srcName + ".mp4"
+        srcDir + "/out-" + srcName
     ])
 
     video_id = write_metadata(
