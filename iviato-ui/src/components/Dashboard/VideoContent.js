@@ -5,6 +5,8 @@ import logo from '../../img/iviato.png';
 import { Player } from 'video-react';
 import ReactVideo from 'react.video';
 
+import { getVideo } from '../../util/Video';
+
 const path = require('path');
 
 /**
@@ -15,6 +17,7 @@ const path = require('path');
 class VideoContent extends Component {
   constructor(props){
     super(props);
+    // console.log(this.state.videoSrc);
   }
 
   render() {
@@ -22,12 +25,14 @@ class VideoContent extends Component {
       <div className="videocontent">
         <Player
           playsInline
-          poster={this.props.preview}
-          src={this.props.video}
+          // poster={require("../../img/background.jpg")}
+          // src={require("../../img/nick.mov")}
+          poster="/img/background.jpg"
+          src="https://s3.us-east-2.amazonaws.com/iviato-videos/33-out-nick"
         />
         <div className="info">
-          <h2 className="title">{this.props.video_title}</h2>
-          <p className="description">{this.props.video_info}</p>
+          <h2 className="title">Video Title</h2>
+          <p className="description">Video description, frame rate, resolution, all the good stuff</p>
         </div>
       </div>
     );
