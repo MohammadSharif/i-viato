@@ -5,6 +5,7 @@ import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import Help from 'material-ui/svg-icons/action/help-outline';
+import WhatsHot from 'material-ui/svg-icons/social/whatshot';
 import ExitApp from 'material-ui/svg-icons/action/exit-to-app';
 import Upload from 'material-ui/svg-icons/file/file-upload';
 import VideoContent from './VideoContent';
@@ -35,6 +36,7 @@ class MainDashboard extends Component {
     this.createUploadsItem = this.createUploadsItem.bind(this);
     this.state = {
       modal: false,
+      shinobify: false,
       currentVideo: require("../../img/nick.mov"),
       currentTitle: "Temporary Video Title Here",
       currentDesc: "Frame rate, resolution, other fun stuff to include",
@@ -71,8 +73,8 @@ class MainDashboard extends Component {
    * @param  {[type]} event menu item click
    * @return {[type]}       state change
    */
-  handleUploadMenuClick(event){
-    this.setState({modal: true})
+  handleUploadMenuClick(isShinobi){
+    this.setState({modal: true, shinobify: isShinobi})
   }
 
   /**
@@ -178,8 +180,14 @@ class MainDashboard extends Component {
                 targetOrigin={{horizontal: 'right', vertical: 'top'}}
                 anchorOrigin={{horizontal: 'right', vertical: 'top'}}
               >
-                <MenuItem primaryText="Upload" leftIcon={<Upload/>} onClick={this.handleUploadMenuClick} />
-                <MenuItem primaryText="Help" leftIcon={<Help/>}/>
+                <MenuItem
+                  primaryText="Upload"
+                  leftIcon={<Upload/>}
+                  onClick={() => this.handleUploadMenuClick(false)} />
+                <MenuItem
+                  primaryText="Shinobify"
+                  leftIcon={<WhatsHot/>}
+                  onClick={() => this.handleUploadMenuClick(true)}/>
                 <MenuItem primaryText="Sign out" leftIcon={<ExitApp/>} onClick={this.handleLogout}/>
               </IconMenu>
             }
