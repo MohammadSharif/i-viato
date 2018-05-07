@@ -37,7 +37,6 @@ const authCheck = jwt({
     jwksRequestsPerMinute: 5,
     jwksUri: `https://${auth.domain}.well-known/jwks.json`
   }),
-  // This is the identifier we set when we created the API
   audience: auth.audience,
   issuer: `https://${auth.domain}`,
   algorithms: ['RS256']
@@ -89,16 +88,20 @@ app.post('/login', async (req, res) => {
 // upload video
 app.post('/videos/upload/:id', [authCheck, upload.single('file')], (req, res) => {
   
-  console.log(req);
-  console.log('***************************** Uploading *****************************');
   const id = req.params.id;
-
   const file = req.file;
   const invokePath = path.resolve('../iviato-pipeline/landmark-detection/pipeline.py');
   const srcDir = path.resolve('../iviato-storage/')
   const srcName = file.originalname;
+  const tgtPath = srcDir + '/out-' + srcName;
 
-  exec(`python3 ${invokePath} ${id} ${srcDir} ${srcName}`,
+  if (fs.existsSync(tgtPath)) {
+    console.log('***************************** Already Uploaded *****************************');
+    res.statusCode = 200; 
+    return;
+  } else {
+    console.log('***************************** Uploading *****************************');
+    exec(`python3 ${invokePath} ${id} ${srcDir} ${srcName}`,
     (error, stdout, stderr) => {
       if (error) {
         console.log(error)
@@ -108,7 +111,24 @@ app.post('/videos/upload/:id', [authCheck, upload.single('file')], (req, res) =>
       }
       console.log(stdout);
       store(id, `${path.resolve('../iviato-storage/')}/out-${srcName}`);
+      console.log('***************************** Finished Processing *****************************');
+      res.statusCode = 201
+      return;
     });
+  }
+});
+
+// list the location of all videos 
+app.get('/videos/:id', authCheck, async (req, res) => {
+  const id = req.params.id;
+  const videos = await db.listVideos(id);
+  
+  if (videos) {
+    res.sendStatus = 200;
+    res.send(JSON.stringify(videos));
+  } else {
+    res.sendStatus = 400;
+  }
 });
 
 const server = app.listen(8081, () => {

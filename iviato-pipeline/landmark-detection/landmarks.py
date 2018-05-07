@@ -123,7 +123,6 @@ def detectLandmarks(imgPath, imgDest):
 
     # Add each frames data to this list so we can write to db in the end
     # Loop over all detected faces in the image
-
     for i, rect in enumerate(rects):
         # get the detections and convert them into a numpy array
         shape = predictor(gray, rect)
@@ -131,17 +130,6 @@ def detectLandmarks(imgPath, imgDest):
         shape = shape_to_coord_list(shape, gray)
         # A list of two elements which are 2-tuples representing pupil coordinates.
         pupils = get_pupils(shape, gray)
-        """
-        @Hirad: The shape variable above this comment contains the list of coords
-        for the facial landmark detection. That would be what needs to get pushed
-        into the DB.
-
-        The "pupils" variable is a list of 2 elements (each eye) the elements are
-        2-tuples representing the eye coordinates.
-
-        pupils[0] == left eye (relative to user point of view of image)
-        pupils[1] == right eye (relative to user point of view of image)
-        """
         # draw facial landmarks on the image
         for x, y in shape:
             #print("(" + str(x) + ", " + str(y) +")")
@@ -152,7 +140,7 @@ def detectLandmarks(imgPath, imgDest):
     # show the output image with detections and landmarks
     image = small = cv2.resize(image, (0,0), fx=0.5, fy=0.5)
     cv2.imwrite(imgDest, image)
-    #cv2.imshow("Output", image)
-    #cv2.waitKey(0)
+    # cv2.imshow("Output", image)
+    # cv2.waitKey(0)
     return {"shape":shape, "pupils":pupils}
 

@@ -1,6 +1,7 @@
 const request = require('request-promise');
 
 const api = require('./config/Default').api;
+const list = require('./Video').list;
 
 export async function signUp(first, last, email, password) {
   const headers = new Headers()
@@ -44,8 +45,8 @@ export async function login(email, password) {
 
   try {
     const response = await request(options);
-    console.log(response)
     storeToken(JSON.parse(response));
+    list();
     return true;
   } catch (error) {
     console.log(`-----Error: ${error}`);

@@ -9,10 +9,10 @@ const S3_CONFIG = config.get('s3');
 
 module.exports.store = async (userId, filePath) => {
   const pathObject = path.parse(filePath);
-  const fileName = pathObject.name + '.mp4';
+  const fileName = pathObject.name;
   console.log('FileName ' + fileName);
   
-  fs.readFile(filePath + '.mp4', (err, data) => {
+  fs.readFile(filePath, (err, data) => {
     if (err) {
       console.log(err);
       return;

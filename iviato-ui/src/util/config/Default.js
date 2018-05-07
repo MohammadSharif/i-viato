@@ -3,4 +3,5 @@ module.exports.api = {
     "signup": "/signup",
     "login": "/login",
     "upload": "/videos/upload",
+    "videos": "/videos"
 };
