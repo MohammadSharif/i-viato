@@ -5,6 +5,7 @@ import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import Help from 'material-ui/svg-icons/action/help-outline';
+import WhatsHot from 'material-ui/svg-icons/social/whatshot';
 import ExitApp from 'material-ui/svg-icons/action/exit-to-app';
 import Upload from 'material-ui/svg-icons/file/file-upload';
 import VideoContent from './VideoContent';
@@ -31,8 +32,15 @@ class MainDashboard extends Component {
     this.handleModalComplete = this.handleModalComplete.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
     this.captureVideoFrame = this.captureVideoFrame.bind(this);
+    this.handleVideoListClick = this.handleVideoListClick.bind(this);
+    this.createUploadsItem = this.createUploadsItem.bind(this);
     this.state = {
       modal: false,
+      shinobify: false,
+      currentVideo: require("../../img/nick.mov"),
+      currentTitle: "Temporary Video Title Here",
+      currentDesc: "Frame rate, resolution, other fun stuff to include",
+
       // The uploads portion of the state should contain the JSON
       // for all of the current users uploaded videos
       // (i.e. preview, title, duration, etc.)
@@ -40,17 +48,20 @@ class MainDashboard extends Component {
         {
           image: background,
           title: 'Testing Video Population',
-          duration: '0:10'
+          duration: '0:10',
+          url: 'temp'
         },
         {
           image: background,
           title: 'Testing Video Population',
-          duration: '0:10'
+          duration: '0:10',
+          url: 'temp'
         },
         {
           image: background,
           title: 'Testing Video Population',
-          duration: '0:10'
+          duration: '0:10',
+          url: 'temp'
         }
       ]
     }
@@ -62,8 +73,8 @@ class MainDashboard extends Component {
    * @param  {[type]} event menu item click
    * @return {[type]}       state change
    */
-  handleUploadMenuClick(event){
-    this.setState({modal: true})
+  handleUploadMenuClick(isShinobi){
+    this.setState({modal: true, shinobify: isShinobi})
   }
 
   /**
@@ -86,11 +97,22 @@ class MainDashboard extends Component {
     this.setState({ redirect: true });
   }
 
+  handleVideoListClick(url, title, description){
+    this.setState({
+      currentVideo: url,
+      currentTitle: title,
+      currentDesc: description
+    })
+  }
+
   createUploadsItem(upload){
     return <VideoItem
               videopreview={upload.image}
               title={upload.title}
               duration={upload.duration}
+              url={upload.url}
+              description={upload.description}
+              onItemClick={this.handleVideoListClick}
               />;
   }
 
@@ -158,8 +180,14 @@ class MainDashboard extends Component {
                 targetOrigin={{horizontal: 'right', vertical: 'top'}}
                 anchorOrigin={{horizontal: 'right', vertical: 'top'}}
               >
-                <MenuItem primaryText="Upload" leftIcon={<Upload/>} onClick={this.handleUploadMenuClick} />
-                <MenuItem primaryText="Help" leftIcon={<Help/>}/>
+                <MenuItem
+                  primaryText="Upload"
+                  leftIcon={<Upload/>}
+                  onClick={() => this.handleUploadMenuClick(false)} />
+                <MenuItem
+                  primaryText="Shinobify"
+                  leftIcon={<WhatsHot/>}
+                  onClick={() => this.handleUploadMenuClick(true)}/>
                 <MenuItem primaryText="Sign out" leftIcon={<ExitApp/>} onClick={this.handleLogout}/>
               </IconMenu>
             }
@@ -170,11 +198,11 @@ class MainDashboard extends Component {
           />
           <div className="content-div">
             <div className="video-div">
-              <VideoContent 
-                preview={this.captureVideoFrame(require("../../img/nick.mov"), 'png')}
-                video={require("../../img/nick.mov")}
-                video_title="Temporary Video Title Here"
-                video_info="Frame rate, resolution, other fun stuff to include"
+              <VideoContent
+                preview={this.captureVideoFrame(this.state.currentVideo, 'png')}
+                video={this.state.currentVideo}
+                video_title={this.state.currentTitle}
+                video_info={this.state.currentDesc}
                 />
             </div>
             <div className="uploads-div">
