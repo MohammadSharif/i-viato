@@ -31,8 +31,14 @@ class MainDashboard extends Component {
     this.handleModalComplete = this.handleModalComplete.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
     this.captureVideoFrame = this.captureVideoFrame.bind(this);
+    this.handleVideoListClick = this.handleVideoListClick.bind(this);
+    this.createUploadsItem = this.createUploadsItem.bind(this);
     this.state = {
       modal: false,
+      currentVideo: require("../../img/nick.mov"),
+      currentTitle: "Temporary Video Title Here",
+      currentDesc: "Frame rate, resolution, other fun stuff to include",
+
       // The uploads portion of the state should contain the JSON
       // for all of the current users uploaded videos
       // (i.e. preview, title, duration, etc.)
@@ -40,17 +46,20 @@ class MainDashboard extends Component {
         {
           image: background,
           title: 'Testing Video Population',
-          duration: '0:10'
+          duration: '0:10',
+          url: 'temp'
         },
         {
           image: background,
           title: 'Testing Video Population',
-          duration: '0:10'
+          duration: '0:10',
+          url: 'temp'
         },
         {
           image: background,
           title: 'Testing Video Population',
-          duration: '0:10'
+          duration: '0:10',
+          url: 'temp'
         }
       ]
     }
@@ -86,11 +95,22 @@ class MainDashboard extends Component {
     this.setState({ redirect: true });
   }
 
+  handleVideoListClick(url, title, description){
+    this.setState({
+      currentVideo: url,
+      currentTitle: title,
+      currentDesc: description
+    })
+  }
+
   createUploadsItem(upload){
     return <VideoItem
               videopreview={upload.image}
               title={upload.title}
               duration={upload.duration}
+              url={upload.url}
+              description={upload.description}
+              onItemClick={this.handleVideoListClick}
               />;
   }
 
@@ -170,11 +190,11 @@ class MainDashboard extends Component {
           />
           <div className="content-div">
             <div className="video-div">
-              <VideoContent 
-                preview={this.captureVideoFrame(require("../../img/nick.mov"), 'png')}
-                video={require("../../img/nick.mov")}
-                video_title="Temporary Video Title Here"
-                video_info="Frame rate, resolution, other fun stuff to include"
+              <VideoContent
+                preview={this.captureVideoFrame(this.state.currentVideo, 'png')}
+                video={this.state.currentVideo}
+                video_title={this.state.currentTitle}
+                video_info={this.state.currentDesc}
                 />
             </div>
             <div className="uploads-div">
