@@ -19,6 +19,7 @@ import logo from '../../img/iviato-white.png';
 import background from '../../img/background.jpg';
 
 import { isAuthorized, logout } from '../../util/User';
+import { mostRecentUpload, otherUploads } from '../../util/Video';
 
 /**
  * The MainDashboard class encapsulates all components used for the application's
@@ -37,34 +38,19 @@ class MainDashboard extends Component {
     this.state = {
       modal: false,
       shinobify: false,
-      currentVideo: require("../../img/nick.mov"),
-      currentTitle: "Temporary Video Title Here",
-      currentDesc: "Frame rate, resolution, other fun stuff to include",
+      // currentVideo: require("../../img/nick.mov"),
+      // currentTitle: "Temporary Video Title Here",
+      // currentDesc: "Frame rate, resolution, other fun stuff to include",
 
       // The uploads portion of the state should contain the JSON
       // for all of the current users uploaded videos
       // (i.e. preview, title, duration, etc.)
-      uploads: [
-        {
-          image: background,
-          title: 'Testing Video Population',
-          duration: '0:10',
-          url: 'temp'
-        },
-        {
-          image: background,
-          title: 'Testing Video Population',
-          duration: '0:10',
-          url: 'temp'
-        },
-        {
-          image: background,
-          title: 'Testing Video Population',
-          duration: '0:10',
-          url: 'temp'
-        }
-      ]
+      currentVideo: mostRecentUpload(),
+      uploads: otherUploads()
     }
+
+    console.log("Other Uploads: " + this.state.uploads);
+    console.log("Current Video: " + this.state.currentVideo);
   }
 
   /**
@@ -107,12 +93,12 @@ class MainDashboard extends Component {
 
   createUploadsItem(upload){
     return <VideoItem
-              videopreview={upload.image}
-              title={upload.title}
-              duration={upload.duration}
+              // videopreview={upload.image}
+              title={upload.filename}
+              // duration={upload.duration}
               url={upload.url}
-              description={upload.description}
-              onItemClick={this.handleVideoListClick}
+              // description={upload.description}
+              // onItemClick={this.handleVideoListClick}
               />;
   }
 
@@ -199,10 +185,10 @@ class MainDashboard extends Component {
           <div className="content-div">
             <div className="video-div">
               <VideoContent
-                preview={this.captureVideoFrame(this.state.currentVideo, 'png')}
+                // preview={this.captureVideoFrame(this.state.currentVideo, 'png')}
                 video={this.state.currentVideo}
-                video_title={this.state.currentTitle}
-                video_info={this.state.currentDesc}
+                video_title="Sample"
+                video_info="Info"
                 />
             </div>
             <div className="uploads-div">

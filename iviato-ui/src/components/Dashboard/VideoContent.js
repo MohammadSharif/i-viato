@@ -1,13 +1,7 @@
-import React, { Component, Video } from 'react';
+import React, { Component } from 'react';
 import './VideoContent.css';
 import "../../../node_modules/video-react/dist/video-react.css";
-import logo from '../../img/iviato.png';
 import { Player } from 'video-react';
-import ReactVideo from 'react.video';
-
-import { getVideo } from '../../util/Video';
-
-const path = require('path');
 
 /**
  * The VideoContent class encapsulates the dashboard's media player and relevant
@@ -17,22 +11,30 @@ const path = require('path');
 class VideoContent extends Component {
   constructor(props){
     super(props);
-    // console.log(this.state.videoSrc);
+    console.log(this.props.video);
   }
+
+  description() {
+    if (this.props.video) {
+      const resolution = `${this.props.video.width}x${this.props.video.height}`;
+      const fps = this.props.video.fps;
+      const frames = this.props.video.frames;
+      const duration = Math.round(this.props.video.frames/this.props.video.fps);
+      return `Duration: ${duration} seconds | Resolution: ${resolution} | FPS: ${fps} | Total # of Frames: ${frames}`;
+    } 
+    return 'Please upload or select a video';
+  } 
 
   render() {
     return (
       <div className="videocontent">
         <Player
           playsInline
-          // poster={require("../../img/background.jpg")}
-          // src={require("../../img/nick.mov")}
-          poster="/img/background.jpg"
-          src="https://s3.us-east-2.amazonaws.com/iviato-videos/33-out-nick"
+          src={this.props.video ? this.props.video.url : ''}
         />
         <div className="info">
-          <h2 className="title">Video Title</h2>
-          <p className="description">Video description, frame rate, resolution, all the good stuff</p>
+          <h2 className="title">{this.props.video ? this.props.video.filename : ''}</h2>
+          <p className="description">{this.description()}</p>
         </div>
       </div>
     );

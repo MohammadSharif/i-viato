@@ -9,32 +9,42 @@ const S3_CONFIG = config.get('s3');
 
 module.exports.store = async (userId, filePath) => {
   const pathObject = path.parse(filePath);
-  const fileName = pathObject.name;
-  console.log('FileName ' + fileName);
-  
-  fs.readFile(filePath, (err, data) => {
+  const s3 = new AWS.S3();
+
+  fs.readFile(pathObject.dir + '/landmark1.png', (err, data) => {
     if (err) {
       console.log(err);
       return;
     }
-    let s3 = new AWS.S3();
-    let key =  `${userId}-${fileName}`
+    let key =  `${pathObject.name}.png`
     let params = { Bucket: S3_CONFIG.bucket, Key: key, Body: data };
     s3.putObject(params, async (err, data) => {
       if (err) {
         console.log(err);
         return;
       }
-        console.log('Uploaded processed video');
-        // console.log(data);
+      console.log('Uploaded thumbnail of video');
+    });
+  });
 
-        const videoUrl = `https://s3.${S3_CONFIG.region}.amazonaws.com/${S3_CONFIG.bucket}/${key}`;
-        await videoUpload(userId, fileName, videoUrl);
-        const scratchDir = path.resolve('../iviato-storage/');
-        // rimraf(scratchDir, () => {
-        //   console.log('Deleting temporary file.')
-        //   fs.mkdirSync(scratchDir);
-        // });
+  fs.readFile(filePath, (err, data) => {
+    if (err) {
+      console.log(err);
+      return;
+    }
+    let key =  pathObject.base;
+    let params = { Bucket: S3_CONFIG.bucket, Key: key, Body: data };
+    s3.putObject(params, async (err, data) => {
+      if (err) {
+        console.log(err);
+        return;
+      }
+      console.log('Uploaded processed video');
+  
+      const videoUrl = `https://s3.${S3_CONFIG.region}.amazonaws.com/${S3_CONFIG.bucket}/${key}`;
+      const metadata = require(filePath + '.json');
+      console.log(metadata)
+      await videoUpload(userId, pathObject.base, videoUrl, metadata);
     });
   });
 };

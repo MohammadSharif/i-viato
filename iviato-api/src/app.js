@@ -87,13 +87,12 @@ app.post('/login', async (req, res) => {
 
 // upload video
 app.post('/videos/upload/:id', [authCheck, upload.single('file')], (req, res) => {
-  
   const id = req.params.id;
   const file = req.file;
   const invokePath = path.resolve('../iviato-pipeline/landmark-detection/pipeline.py');
   const srcDir = path.resolve('../iviato-storage/')
   const srcName = file.originalname;
-  const tgtPath = srcDir + '/out-' + srcName;
+  const tgtPath = srcDir + `/${id}_` + srcName;
 
   if (fs.existsSync(tgtPath)) {
     console.log('***************************** Already Uploaded *****************************');
@@ -110,7 +109,7 @@ app.post('/videos/upload/:id', [authCheck, upload.single('file')], (req, res) =>
         console.log(stderr)
       }
       console.log(stdout);
-      store(id, `${path.resolve('../iviato-storage/')}/out-${srcName}`);
+      store(id, `${path.resolve('../iviato-storage/')}/${id}_${srcName}`);
       console.log('***************************** Finished Processing *****************************');
       res.statusCode = 201
       return;

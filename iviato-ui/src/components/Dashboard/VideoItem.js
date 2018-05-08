@@ -14,7 +14,7 @@ class VideoItem extends Component {
   }
 
   onComponentClick = () => {
-    this.props.onItemClick(this.props.url, this.props.title, this.props.description);
+    this.props.onItemClick(this.props.url, this.props.title);
   }
 
   render() {

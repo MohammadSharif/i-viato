@@ -42,6 +42,7 @@ export function list() {
     .then((res) => {
       const videos = _.uniqBy(res.data, 'filename');
       storeVideos(videos);
+      return true;
     })
     .catch((err) => {
       console.log(err);
@@ -61,13 +62,14 @@ export function mostRecentUpload() {
 }
 
 export function otherUploads() {
-  const videos = getVideos();
+  let videos = getVideos();
   if (videos && videos.length > 0) {
-    videos = videos.splice(-1, 1);
     console.log('Found videos');
-    return _.reverse(videos);
+    console.log(videos);
+    return videos;
   } else {
     console.log('Unable to fetch videos');
+    return [];
   }
 }
 
@@ -76,5 +78,5 @@ export function storeVideos(videos) {
 }
 
 export function getVideos() {
-  return JSON.parse(localStorage.get('videos'));
+  return JSON.parse(localStorage.getItem('videos'));
 }
