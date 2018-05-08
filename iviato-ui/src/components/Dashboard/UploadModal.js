@@ -44,6 +44,7 @@ class UploadModal extends Component {
    * @return {[type]}       void
    */
   handleUploadClick(event){
+    this.props.toggleLoading();
     upload(this.state.video);
     this.resetModal()
   }
