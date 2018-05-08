@@ -21,7 +21,7 @@ const store = require('./service/storage').store;
 const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
-app.use(cors())
+app.use(cors({ origin: '*'}));
 
 const storage = multer.diskStorage({
   destination: '../iviato-storage/',
@@ -97,7 +97,9 @@ app.post('/videos/upload/:id', [authCheck, upload.single('file')], (req, res) =>
 
   if (fs.existsSync(tgtPath)) {
     console.log('***************************** Already Uploaded *****************************');
-    res.sendStatus(200);
+    setTimeout( () => {
+      res.sendStatus(200);
+    }, 10000);
     return;
   } else {
     console.log('***************************** Uploading *****************************');
@@ -109,7 +111,7 @@ app.post('/videos/upload/:id', [authCheck, upload.single('file')], (req, res) =>
       if (stderr) {
         console.log(stderr)
       }
-      console.log(stdout);
+      // console.log(stdout);
       await store(id, `${path.resolve('../iviato-storage/')}/${id}_${srcName}`);
       console.log('***************************** Finished Processing *****************************');
       res.sendStatus(201);

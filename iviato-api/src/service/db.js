@@ -117,6 +117,7 @@ module.exports.listVideos = async (id) => {
 
   try {
     const videos = await client.query(query);
+    console.log('Listed Videos');
     client.end();
     return videos.rows;
   } catch (error) {

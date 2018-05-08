@@ -43,7 +43,7 @@ module.exports.store = async (userId, filePath) => {
   
       const videoUrl = `https://s3.${S3_CONFIG.region}.amazonaws.com/${S3_CONFIG.bucket}/${key}`;
       const metadata = require(filePath + '.json');
-      console.log(metadata)
+      // console.log(metadata)
       await videoUpload(userId, pathObject.base.split('_')[1], videoUrl, metadata);
     });
   });

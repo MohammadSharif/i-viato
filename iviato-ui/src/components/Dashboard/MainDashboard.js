@@ -19,7 +19,7 @@ import logo from '../../img/iviato-white.png';
 import background from '../../img/background.jpg';
 
 import { isAuthorized, logout } from '../../util/User';
-import { everyOtherUploadExcept, list, mostRecentUpload, otherUploads } from '../../util/Video';
+import { changeCurrentVideo, list, getCurrentVideo, getOtherVideos, setCurrentVideo } from '../../util/Video';
 
 /**
  * The MainDashboard class encapsulates all components used for the application's
@@ -43,8 +43,8 @@ class MainDashboard extends Component {
       // The uploads portion of the state should contain the JSON
       // for all of the current users uploaded videos
       // (i.e. preview, title, duration, etc.)
-      currentVideo: mostRecentUpload(),
-      uploads: otherUploads()
+      currentVideo: getCurrentVideo(),
+      uploads: getOtherVideos()
     }
 
     console.log("Other Uploads: " + this.state.uploads);
@@ -82,15 +82,18 @@ class MainDashboard extends Component {
   }
 
   handleVideoListClick(video){
-    this.setState({ currentVideo: video, uploads: everyOtherUploadExcept(video) });
+    changeCurrentVideo(video);
+    this.setState({ currentVideo: video, uploads: getOtherVideos() });
   }
 
   toggleLoading(){
-    this.setState({
-      loading: !this.state.loading,
-      currentVideo: mostRecentUpload(),
-      uploads: otherUploads()
-    });
+    console.log('Refreshing Videos');
+    list()
+      .then( () => {
+        this.setState({
+          loading: !this.state.loading,
+        });
+      });
   }
 
   createUploadsItem(upload) {

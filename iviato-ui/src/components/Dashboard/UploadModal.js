@@ -47,10 +47,7 @@ class UploadModal extends Component {
     this.props.toggleLoading();
     upload(this.state.video)
       .then( (res) => {
-        console.log(res);
-        console.log('Finished Uploading');
         this.props.toggleLoading();
-        list();
       });
     this.resetModal()
   }

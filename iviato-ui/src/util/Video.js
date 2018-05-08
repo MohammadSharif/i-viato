@@ -19,8 +19,6 @@ export async function upload(file) {
       'Access-Control-Allow-Origin': '*'
     }
   });
-
-  console.log('result' + result);
 }
 
 export async function list() {
@@ -32,53 +30,48 @@ export async function list() {
       'authorization': token,
       'Access-Control-Allow-Origin': '*'
     }
-  })
+  });
 
   if (res.data) {
     const videos = _.uniqBy(res.data, 'filename');
-    storeVideos(videos);
-    return true;
+    setCurrentVideo(videos[0]);
+    setOtherVideos(videos.slice(1));
+    return videos;
   } else {
     console.log('Unable to list videos');
-    console.log(res);
     return false;
   }
 }
 
-export function mostRecentUpload() {
-  const videos = getVideos();
-  if (videos && videos.length > 0) {
-    const video = videos[0]
-    console.log(`Found video ${video.filename} at ${video.url}`);
-    return video;
-  } else {
-    console.log('Unable to fetch most recent video');
-  }
+export function changeCurrentVideo(video) {
+  const all = getAllVideos();
+  let others = _.map(all, (v) => { 
+    if (v.filename !== video.filename) {
+      return v;
+    }  
+  });
+  others = _.without(others, undefined);
+  setCurrentVideo(video);
+  setOtherVideos(others);
+} 
+
+export function setCurrentVideo(video) {
+    localStorage.setItem('current_video', JSON.stringify(video));
 }
 
-export function otherUploads() {
-  let videos = getVideos();
-  if (videos && videos.length > 0) {
-    console.log('Found videos');
-    videos = videos.slice(1);
-    console.log(videos);
-    return videos;
-  } else {
-    console.log('Unable to fetch videos');
-    return [];
-  }
+export function getCurrentVideo() {
+  return JSON.parse(localStorage.getItem('current_video')) || {};
 }
 
-export function everyOtherUploadExcept(current) {
-  let videos = getVideos();
-  console.log(videos);
-  return _.remove(videos, v => v.url === current.url);
+export function setOtherVideos(videos) {
+  localStorage.setItem('other_videos', JSON.stringify(videos));
 }
 
-export function storeVideos(videos) {
-  localStorage.setItem('videos', JSON.stringify(videos));
+export function getOtherVideos() {
+  return JSON.parse(localStorage.getItem('other_videos')) || [];
 }
 
-export function getVideos() {
-  return JSON.parse(localStorage.getItem('videos'));
+export function getAllVideos() {
+  const all = [getCurrentVideo()].concat(getOtherVideos());
+  return all;
 }
