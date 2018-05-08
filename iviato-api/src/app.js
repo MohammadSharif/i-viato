@@ -103,8 +103,7 @@ app.post('/videos/upload/:id', [authCheck, upload.single('file')], (req, res) =>
     return;
   } else {
     console.log('***************************** Uploading *****************************');
-    exec(`python3 ${invokePath} ${id} ${srcDir} ${srcName}`,
-    async (error, stdout, stderr) => {
+    exec(`python3 ${invokePath} ${id} ${srcDir} ${srcName}`, (error, stdout, stderr) => {
       if (error) {
         console.log(error)
       }
@@ -112,9 +111,11 @@ app.post('/videos/upload/:id', [authCheck, upload.single('file')], (req, res) =>
         console.log(stderr)
       }
       // console.log(stdout);
-      await store(id, `${path.resolve('../iviato-storage/')}/${id}_${srcName}`);
-      console.log('***************************** Finished Processing *****************************');
-      res.sendStatus(201);
+      store(id, `${path.resolve('../iviato-storage/')}/${id}_${srcName}`)
+        .then( () => {
+          console.log('***************************** Finished Processing *****************************');
+          res.sendStatus(201);
+        });
       return;
     });
   }

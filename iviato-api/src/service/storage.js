@@ -14,14 +14,12 @@ module.exports.store = async (userId, filePath) => {
   fs.readFile(pathObject.dir + '/landmark1.png', (err, data) => {
     if (err) {
       console.log(err);
-      return;
     }
     let key =  `${pathObject.name}.png`
     let params = { Bucket: S3_CONFIG.bucket, Key: key, Body: data };
     s3.putObject(params, async (err, data) => {
       if (err) {
         console.log(err);
-        return;
       }
       console.log('Uploaded thumbnail of video');
     });
@@ -30,21 +28,18 @@ module.exports.store = async (userId, filePath) => {
   fs.readFile(filePath, (err, data) => {
     if (err) {
       console.log(err);
-      return;
     }
     let key =  pathObject.base;
     let params = { Bucket: S3_CONFIG.bucket, Key: key, Body: data };
     s3.putObject(params, async (err, data) => {
       if (err) {
         console.log(err);
-        return;
       }
       console.log('Uploaded processed video');
-  
-      const videoUrl = `https://s3.${S3_CONFIG.region}.amazonaws.com/${S3_CONFIG.bucket}/${key}`;
-      const metadata = require(filePath + '.json');
-      // console.log(metadata)
-      await videoUpload(userId, pathObject.base.split('_')[1], videoUrl, metadata);
-    });
+        });
   });
+
+  const videoUrl = `https://s3.${S3_CONFIG.region}.amazonaws.com/${S3_CONFIG.bucket}/${pathObject.base}`;
+  const metadata = require(filePath + '.json');
+  await videoUpload(userId, pathObject.base.split('_')[1], videoUrl, metadata);
 };

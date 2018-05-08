@@ -46,9 +46,6 @@ class MainDashboard extends Component {
       currentVideo: getCurrentVideo(),
       uploads: getOtherVideos()
     }
-
-    console.log("Other Uploads: " + this.state.uploads);
-    console.log("Current Video: " + this.state.currentVideo);
   }
 
   /**
@@ -86,14 +83,22 @@ class MainDashboard extends Component {
     this.setState({ currentVideo: video, uploads: getOtherVideos() });
   }
 
-  toggleLoading(){
-    console.log('Refreshing Videos');
-    list()
-      .then( () => {
-        this.setState({
-          loading: !this.state.loading,
+  toggleLoading(finished) {
+    if (finished) {
+      console.log('Refreshing Videos');
+      list()
+        .then( () => {
+          this.setState({
+            loading: !this.state.loading,
+            currentVideo: getCurrentVideo(),
+            uploads: getOtherVideos()
+          });
         });
+    } else {
+      this.setState({
+        loading: !this.state.loading,
       });
+    }
   }
 
   createUploadsItem(upload) {
@@ -104,11 +109,15 @@ class MainDashboard extends Component {
   }
 
   videoDescription(video) {
-    const resolution = `${video.width}x${video.height}`;
-    const fps = video.fps;
-    const frames = video.frames;
-    const duration = Math.round(video.frames/video.fps);
-    return `Duration: ${duration} seconds | Resolution: ${resolution} | FPS: ${fps} | Total # of Frames: ${frames}`;
+    if (video) {
+      const resolution = `${video.width}x${video.height}`;
+      const fps = video.fps;
+      const frames = video.frames;
+      const duration = Math.round(video.frames/video.fps);
+      return `Duration: ${duration} seconds | Resolution: ${resolution} | FPS: ${fps} | Total # of Frames: ${frames}`;
+    } else {
+      return 'Please upload or select a video';
+    }
   }
 
   createUploadsList(uploads){

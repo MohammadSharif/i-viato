@@ -45,15 +45,19 @@ export async function list() {
 
 export function changeCurrentVideo(video) {
   const all = getAllVideos();
-  let others = _.map(all, (v) => { 
-    if (v.filename !== video.filename) {
-      return v;
-    }  
-  });
-  others = _.without(others, undefined);
-  setCurrentVideo(video);
-  setOtherVideos(others);
-} 
+  if (all) {
+    let others = _.map(all, (v) => { 
+      if (v.filename !== video.filename) {
+        return v;
+      }  
+    });
+    others = _.without(others, undefined);
+    setCurrentVideo(video);
+    setOtherVideos(others);
+  } else {
+    return undefined;
+  }
+}
 
 export function setCurrentVideo(video) {
     localStorage.setItem('current_video', JSON.stringify(video));
