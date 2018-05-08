@@ -20,7 +20,7 @@ module.exports.signup = async (first, last, email, password) => {
   client.connect();
   console.log('connected to postgres');
   let query = 'INSERT INTO develop.userdata(first, last, email, password) VALUES ($1, $2, $3, $4) RETURNING *';
-  let values = [first, last, email, password];
+  let values = [first, last, encrypt(email), encrypt(password)];
 
   try {
     const user = await client.query(query, values);
@@ -59,7 +59,7 @@ module.exports.login = async (email, password) => {
 
   client.connect();
   console.log('connected to postgres');
-  const query = `SELECT * FROM develop.userdata WHERE "email"='${email}' AND "password"='${password}'`;
+  const query = `SELECT * FROM develop.userdata WHERE "email"='${encrypt(email)}' AND "password"='${encrypt(password)}'`;
   
   try {
     const user = await client.query(query);

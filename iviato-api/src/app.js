@@ -11,6 +11,7 @@ const multer = require('multer');
 const path = require('path');
 const rimraf = require('rimraf');
 const spawn = require('child_process').spawn;
+const _ = require('lodash');
 
 const auth = config.get('auth0');
 const authorize = require('./service/auth').authorize;
@@ -96,12 +97,12 @@ app.post('/videos/upload/:id', [authCheck, upload.single('file')], (req, res) =>
 
   if (fs.existsSync(tgtPath)) {
     console.log('***************************** Already Uploaded *****************************');
-    res.statusCode = 200; 
+    res.sendStatus(200);
     return;
   } else {
     console.log('***************************** Uploading *****************************');
     exec(`python3 ${invokePath} ${id} ${srcDir} ${srcName}`,
-    (error, stdout, stderr) => {
+    async (error, stdout, stderr) => {
       if (error) {
         console.log(error)
       }
@@ -109,9 +110,9 @@ app.post('/videos/upload/:id', [authCheck, upload.single('file')], (req, res) =>
         console.log(stderr)
       }
       console.log(stdout);
-      store(id, `${path.resolve('../iviato-storage/')}/${id}_${srcName}`);
+      await store(id, `${path.resolve('../iviato-storage/')}/${id}_${srcName}`);
       console.log('***************************** Finished Processing *****************************');
-      res.statusCode = 201
+      res.sendStatus(201);
       return;
     });
   }
@@ -124,7 +125,7 @@ app.get('/videos/:id', authCheck, async (req, res) => {
   
   if (videos) {
     res.sendStatus = 200;
-    res.send(JSON.stringify(videos));
+    res.send(JSON.stringify(_.reverse(videos)));
   } else {
     res.sendStatus = 400;
   }

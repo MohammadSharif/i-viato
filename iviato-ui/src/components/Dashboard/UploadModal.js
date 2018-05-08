@@ -6,7 +6,7 @@ import Upload from 'material-ui/svg-icons/av/video-call';
 
 import './UploadModal.css';
 
-import { upload } from '../../util/Video';
+import { list, upload } from '../../util/Video';
 
 /**
  * The UploadModal class contains all necessary functionality and components
@@ -43,9 +43,15 @@ class UploadModal extends Component {
    * @param  {[type]} event button click
    * @return {[type]}       void
    */
-  handleUploadClick(event){
+   handleUploadClick(event){
     this.props.toggleLoading();
-    upload(this.state.video);
+    upload(this.state.video)
+      .then( (res) => {
+        console.log(res);
+        console.log('Finished Uploading');
+        this.props.toggleLoading();
+        list();
+      });
     this.resetModal()
   }
 

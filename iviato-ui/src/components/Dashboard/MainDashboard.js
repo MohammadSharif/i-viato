@@ -19,7 +19,7 @@ import logo from '../../img/iviato-white.png';
 import background from '../../img/background.jpg';
 
 import { isAuthorized, logout } from '../../util/User';
-import { mostRecentUpload, otherUploads } from '../../util/Video';
+import { everyOtherUploadExcept, list, mostRecentUpload, otherUploads } from '../../util/Video';
 
 /**
  * The MainDashboard class encapsulates all components used for the application's
@@ -40,10 +40,6 @@ class MainDashboard extends Component {
       modal: false,
       shinobify: false,
       loading: false,
-      currentVideo: require("../../img/nick.mov"),
-      currentTitle: "Temporary Video Title Here",
-      currentDesc: "Frame rate, resolution, other fun stuff to include",
-
       // The uploads portion of the state should contain the JSON
       // for all of the current users uploaded videos
       // (i.e. preview, title, duration, etc.)
@@ -85,29 +81,31 @@ class MainDashboard extends Component {
     this.setState({ redirect: true });
   }
 
-  handleVideoListClick(url, title, description){
-    this.setState({
-      currentVideo: url,
-      currentTitle: title,
-      currentDesc: description
-    })
+  handleVideoListClick(video){
+    this.setState({ currentVideo: video, uploads: everyOtherUploadExcept(video) });
   }
 
   toggleLoading(){
     this.setState({
-      loading: !this.state.loading
-    })
+      loading: !this.state.loading,
+      currentVideo: mostRecentUpload(),
+      uploads: otherUploads()
+    });
   }
 
-  createUploadsItem(upload){
+  createUploadsItem(upload) {
     return <VideoItem
-              // videopreview={upload.image}
-              title={upload.filename}
-              // duration={upload.duration}
-              url={upload.url}
-              // description={upload.description}
-              // onItemClick={this.handleVideoListClick}
+              onItemClick={this.handleVideoListClick}
+              video={upload}
               />;
+  }
+
+  videoDescription(video) {
+    const resolution = `${video.width}x${video.height}`;
+    const fps = video.fps;
+    const frames = video.frames;
+    const duration = Math.round(video.frames/video.fps);
+    return `Duration: ${duration} seconds | Resolution: ${resolution} | FPS: ${fps} | Total # of Frames: ${frames}`;
   }
 
   createUploadsList(uploads){
@@ -154,13 +152,18 @@ class MainDashboard extends Component {
       return <Redirect push to="/" />;
     }
 
+    if (this.state.loading) {
+      return (
+        <div className={`loading-${this.state.loading}`}>
+            <Loader type="Ball-Triangle" color="#4aa9f4" height={80} width={80} />
+            <h3>Processing...</h3>
+        </div>
+      );
+    }
+
     if (isAuthorized().token) {
       return (
         <div className="maindashboard">
-          <div className={`loading-${this.state.loading}`}>
-            <Loader type="Ball-Triangle" color="#4aa9f4" height={80} width={80} />
-            <h3>Processing...</h3>
-          </div>
           <UploadModal
             toggled={this.state.modal}
             onClick={() => this.handleModalComplete()}

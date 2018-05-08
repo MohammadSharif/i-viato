@@ -5,7 +5,7 @@ const _ = require('lodash');
 const api = require('./config/Default').api;
 const isAuthorized = require('./User').isAuthorized;
 
-export function upload(file) {
+export async function upload(file) {
   if (!file) { return false; }
 
   const authorization = isAuthorized();
@@ -13,47 +13,42 @@ export function upload(file) {
   form.append('file', file);
   const token = `Bearer ${authorization.token}`;
 
-  axios.post(api.base + api.upload + `/${authorization.id}`, form, {
+  const result = await axios.post(api.base + api.upload + `/${authorization.id}`, form, {
     headers: {
       'authorization': token,
       'Access-Control-Allow-Origin': '*'
     }
-  })
-    .then((res) => {
-      console.log('Video uploaded');
-      return true;
-    })
-    .catch((err) => {
-      console.log(err)
-      return false;
-    });
+  });
+
+  console.log('result' + result);
 }
 
-export function list() {
+export async function list() {
   const authorization = isAuthorized();
   const token = `Bearer ${authorization.token}`;
 
-  axios.get(api.base + api.videos + `/${authorization.id}`, {
+  const res = await axios.get(api.base + api.videos + `/${authorization.id}`, {
     headers: {
       'authorization': token,
       'Access-Control-Allow-Origin': '*'
     }
   })
-    .then((res) => {
-      const videos = _.uniqBy(res.data, 'filename');
-      storeVideos(videos);
-      return true;
-    })
-    .catch((err) => {
-      console.log(err);
-      return false;
-    });
+
+  if (res.data) {
+    const videos = _.uniqBy(res.data, 'filename');
+    storeVideos(videos);
+    return true;
+  } else {
+    console.log('Unable to list videos');
+    console.log(res);
+    return false;
+  }
 }
 
 export function mostRecentUpload() {
   const videos = getVideos();
   if (videos && videos.length > 0) {
-    const video = videos[videos.length - 1];
+    const video = videos[0]
     console.log(`Found video ${video.filename} at ${video.url}`);
     return video;
   } else {
@@ -65,12 +60,19 @@ export function otherUploads() {
   let videos = getVideos();
   if (videos && videos.length > 0) {
     console.log('Found videos');
+    videos = videos.slice(1);
     console.log(videos);
     return videos;
   } else {
     console.log('Unable to fetch videos');
     return [];
   }
+}
+
+export function everyOtherUploadExcept(current) {
+  let videos = getVideos();
+  console.log(videos);
+  return _.remove(videos, v => v.url === current.url);
 }
 
 export function storeVideos(videos) {

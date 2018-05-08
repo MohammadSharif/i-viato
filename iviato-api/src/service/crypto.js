@@ -1,17 +1,19 @@
-const secret = 'iviato';
+const config = require('config');
 
-var Cryptr = require('cryptr'),
-    cryptr = new Cryptr(secret);
+const secret = config.get('encryption').secret;
+
+const Cryptr = require('cryptr'),
+	cryptr = new Cryptr(secret);
 
 function encrypt(clearText) {
-    return cryptr.encrypt(clearText);
+	return cryptr.encrypt(clearText);
 }
 
 function decrypt(encrypted) {
-    return cryptr.decrypt(encrypted);
-} 
+	return cryptr.decrypt(encrypted);
+}
 
 module.exports = {
-    encrypt, 
-    decrypt,
+	encrypt,
+	decrypt,
 }
