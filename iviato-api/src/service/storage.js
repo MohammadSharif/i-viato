@@ -36,10 +36,11 @@ module.exports.store = async (userId, filePath) => {
         console.log(err);
       }
       console.log('Uploaded processed video');
-        });
+    });
   });
 
   const videoUrl = `https://s3.${S3_CONFIG.region}.amazonaws.com/${S3_CONFIG.bucket}/${pathObject.base}`;
+  const imageUrl = `https://s3.${S3_CONFIG.region}.amazonaws.com/${S3_CONFIG.bucket}/${pathObject.name}.png`;
   const metadata = require(filePath + '.json');
-  await videoUpload(userId, pathObject.base.split('_')[1], videoUrl, metadata);
+  await videoUpload(userId, pathObject.base.split('_')[1], videoUrl, imageUrl, metadata);
 };

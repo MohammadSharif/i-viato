@@ -27,7 +27,7 @@ module.exports.signup = async (first, last, email, password) => {
     console.log('Created user');
     const id = user.rows[0].id;
     
-    query = `CREATE TABLE videos.videos${id} (filename TEXT, url TEXT, width INT, height INT, frames INT, fps INT, videoid INT)`;
+    query = `CREATE TABLE videos.videos${id} (filename TEXT, url TEXT, width INT, height INT, frames INT, fps INT, videoid INT, imageurl TEXT)`;
     try {
       const table = await client.query(query);
       console.log('Created user table');
@@ -76,7 +76,7 @@ module.exports.login = async (email, password) => {
   client.end();
 };
 
-module.exports.videoUpload = async (id, name, videoUrl, metadata) => {
+module.exports.videoUpload = async (id, name, videoUrl, imageUrl, metadata) => {
   const client = new pg.Client({
     user: dbConfig.user,
     host: dbConfig.host,
@@ -87,8 +87,8 @@ module.exports.videoUpload = async (id, name, videoUrl, metadata) => {
 
   client.connect();
   console.log('connected to postgres');
-  const query = `INSERT INTO videos.videos${id}(filename, url, width, height, frames, fps, videoid) VALUES ($1, $2, $3, $4, $5, $6, $7)`;
-  const values = [name, videoUrl, metadata['width'], metadata['height'], metadata['numframes'], metadata['fps'], metadata['video_id']];
+  const query = `INSERT INTO videos.videos${id}(filename, url, width, height, frames, fps, videoid, imageurl) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`;
+  const values = [name, videoUrl, metadata['width'], metadata['height'], metadata['numframes'], metadata['fps'], metadata['video_id'], imageUrl];
   // console.log(query);
   try {
     const upload = await client.query(query, values);
