@@ -109,7 +109,7 @@ def draw_delaunay(img, subdiv, delaunay_color) :
             cv2.line(img, pt2, pt3, delaunay_color, 1, cv2.LINE_AA, 0)
             cv2.line(img, pt3, pt1, delaunay_color, 1, cv2.LINE_AA, 0)
 
-def drawYPRLine(size,shape, image):
+def getYPRLine(size,shape, image, isShinobi):
     print("filler")
     #2D image points. If you change the image, you need to change vector
     image_points = np.array([
@@ -148,24 +148,24 @@ def drawYPRLine(size,shape, image):
     dist_coeffs = np.zeros((4,1)) # Assuming no lens distortion
     (success, rotation_vector, translation_vector) = cv2.solvePnP(model_points, image_points, camera_matrix, dist_coeffs, flags=cv2.SOLVEPNP_ITERATIVE)
      
-    #print ("Rotation Vector:\n {0}".format(rotation_vector))
+    print ("Rotation Vector:\n {0}".format(rotation_vector))
     #print ("Translation Vector:\n {0}".format(translation_vector))
      
      
     # Project a 3D point (0, 0, 1000.0) onto the image plane.
     # We use this to draw a line sticking out of the nose
      
-     
-    #(nose_end_point2D, jacobian) = cv2.projectPoints(np.array([(0.0, 0.0, 1000.0)]), rotation_vector, translation_vector, camera_matrix, dist_coeffs)
-     
-    #for p in image_points:
-    #    cv2.circle(image, (int(p[0]), int(p[1])), 3, (0,0,255), -1)
-     
-     
-    #p1 = ( int(image_points[0][0]), int(image_points[0][1]))
-    #p2 = ( int(nose_end_point2D[0][0][0]), int(nose_end_point2D[0][0][1]))
-     
-    #cv2.line(image, p1, p2, (255,0,0), 2)
+    if not isShinobi:      
+        (nose_end_point2D, jacobian) = cv2.projectPoints(np.array([(0.0, 0.0, 1000.0)]), rotation_vector, translation_vector, camera_matrix, dist_coeffs)
+         
+        for p in image_points:
+            cv2.circle(image, (int(p[0]), int(p[1])), 3, (0,0,255), -1)
+         
+         
+        p1 = ( int(image_points[0][0]), int(image_points[0][1]))
+        p2 = ( int(nose_end_point2D[0][0][0]), int(nose_end_point2D[0][0][1]))
+         
+        cv2.line(image, p1, p2, (255,0,0), 2)
      
     # Display image
     return rotation_vector
@@ -179,7 +179,7 @@ def makeShinobi(image, shape):
     #shape30 --> nose tip
     #shape27 --> top of nose
     #pythagoran thm to get distance
-    noseLength = math.sqrt(math.pow(shape[8][1] - shape[27][1], 2)+math.pow(shape[8][1] - shape[27][1], 2))/3.3
+    noseLength = math.sqrt(math.pow(shape[8][1] - shape[27][1], 2)+math.pow(shape[8][1] - shape[27][1], 2))/4.2
     
     #will be used to set the height of the headband
     headbandShape = headband.shape
@@ -206,7 +206,7 @@ def makeShinobi(image, shape):
 
 
 #will detect landmarks of image draw the delauny triangles and save the image to the 
-def detectLandmarks(imgPath, imgDest):
+def detectLandmarks(imgPath, imgDest, isShinobi):
 
     # For better detection we need to get the image resizes and converted to grayscale
     image = cv2.imread(imgPath)
@@ -230,8 +230,10 @@ def detectLandmarks(imgPath, imgDest):
         shape = predictor(gray, rect)
         # A list of 68 2-tuples representing facial landmark coordinates
         shape = shape_to_coord_list(shape, gray)
-        drawYPRLine(size, shape, image)
-        makeShinobi(image, shape)
+        rotation_vector= getYPRLine(size, shape, image, isShinobi)
+        if isShinobi:
+            makeShinobi(image, shape)
+    
         # A list of two elements which are 2-tuples representing pupil coordinates.
         pupils = get_pupils(shape, gray)
         """
@@ -246,15 +248,16 @@ def detectLandmarks(imgPath, imgDest):
         pupils[1] == right eye (relative to user point of view of image)
         """
         # draw facial landmarks on the image
-        for x, y in shape:
-            #print("(" + str(x) + ", " + str(y) +")")
-            cv2.circle(image, (x, y), 2, (255, 255, 255), -1)
-            subdiv.insert((x,y))
-        #draw_delaunay( image, subdiv, (255, 255, 255))
+        if not isShinobi:
+            for x, y in shape:
+                #print("(" + str(x) + ", " + str(y) +")")
+                cv2.circle(image, (x, y), 2, (255, 255, 255), -1)
+                subdiv.insert((x,y))
+            draw_delaunay( image, subdiv, (255, 255, 255))
     # show the output image with detections and landmarks
     #image = small = cv2.resize(image, (0,0), fx=0.5, fy=0.5)
     cv2.imwrite(imgDest, image)
     #cv2.imshow("Output", image)
     #cv2.waitKey(0)
-    return {"shape":shape, "pupils":pupils}
+    return {"shape":shape, "pupils":pupils, "rotation": rotation_vector}
 
