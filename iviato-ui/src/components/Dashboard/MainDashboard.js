@@ -12,7 +12,7 @@ import VideoContent from './VideoContent';
 import VideoItem from './VideoItem';
 import UploadModal from './UploadModal';
 import { Redirect } from 'react-router-dom';
-
+import Loader from 'react-loader-spinner';
 
 import './MainDashboard.css';
 import logo from '../../img/iviato-white.png';
@@ -35,12 +35,14 @@ class MainDashboard extends Component {
     this.captureVideoFrame = this.captureVideoFrame.bind(this);
     this.handleVideoListClick = this.handleVideoListClick.bind(this);
     this.createUploadsItem = this.createUploadsItem.bind(this);
+    this.toggleLoading = this.toggleLoading.bind(this);
     this.state = {
       modal: false,
       shinobify: false,
-      // currentVideo: require("../../img/nick.mov"),
-      // currentTitle: "Temporary Video Title Here",
-      // currentDesc: "Frame rate, resolution, other fun stuff to include",
+      loading: false,
+      currentVideo: require("../../img/nick.mov"),
+      currentTitle: "Temporary Video Title Here",
+      currentDesc: "Frame rate, resolution, other fun stuff to include",
 
       // The uploads portion of the state should contain the JSON
       // for all of the current users uploaded videos
@@ -88,6 +90,12 @@ class MainDashboard extends Component {
       currentVideo: url,
       currentTitle: title,
       currentDesc: description
+    })
+  }
+
+  toggleLoading(){
+    this.setState({
+      loading: !this.state.loading
     })
   }
 
@@ -149,7 +157,15 @@ class MainDashboard extends Component {
     if (isAuthorized().token) {
       return (
         <div className="maindashboard">
-          <UploadModal toggled={this.state.modal} onClick={() => this.handleModalComplete()}/>
+          <div className={`loading-${this.state.loading}`}>
+            <Loader type="Ball-Triangle" color="#4aa9f4" height={80} width={80} />
+            <h3>Processing...</h3>
+          </div>
+          <UploadModal
+            toggled={this.state.modal}
+            onClick={() => this.handleModalComplete()}
+            toggleLoading={this.toggleLoading}
+            />
           <input
             type="file"
             id="imgupload"
