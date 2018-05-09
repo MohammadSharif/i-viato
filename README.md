@@ -1,4 +1,4 @@
-<img src="/iviato-ui/src/img/iviato.png" width="500"/>
+<div style="text-align:center"><img src="/iviato-ui/src/img/iviato.png" width="500"/></div>
 
 This README will contain the necessary links to navigate through our
 repository according to each major component to the application and pipeline.
