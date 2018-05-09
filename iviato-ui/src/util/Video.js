@@ -1,5 +1,6 @@
 const axios = require('axios');
 const fs = require('fs');
+const path = require('path');
 const _ = require('lodash');
   
 const api = require('./config/Default').api;
@@ -68,8 +69,7 @@ export function setCurrentVideo(video) {
 }
 
 export function getCurrentVideo() {
-  
-  return localStorage.getItem('current_video') ? JSON.parse(localStorage.getItem('current_video')) : {};
+  return localStorage.getItem('current_video') ? JSON.parse(localStorage.getItem('current_video')) : defaultVideo();
 }
 
 export function setOtherVideos(videos) {
@@ -77,10 +77,21 @@ export function setOtherVideos(videos) {
 }
 
 export function getOtherVideos() {
-  return localStorage.getItem('current_video') ? JSON.parse(localStorage.getItem('other_videos')) : [];
+  return localStorage.getItem('other_videos') ? JSON.parse(localStorage.getItem('other_videos')) : [];
 }
 
 export function getAllVideos() {
   const all = [getCurrentVideo()].concat(getOtherVideos());
   return all;
+}
+
+function defaultVideo() {
+  const video = {
+    filename: 'My Aviato?',
+    url: 'https://s3.us-east-2.amazonaws.com/iviato-videos/Aviato.mp4',
+    description: 'One of our favorite scenes from our favorite show.'
+  }
+  setCurrentVideo(video);
+  console.log(video.url);
+  return video;
 }
