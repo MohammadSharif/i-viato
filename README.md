@@ -44,7 +44,7 @@ The pipeline of the application is written using C and Python. We've also made u
 
     2. 'videos': Each user will have its own table in this schema following the pattern `videos{id}`. This table keeps track of each uploaded video and its location.
 
-        ![Video Id](/etc/database/VideoId.png)
+        <img src="/etc/database/VideoId.png" width="500"/>
 
 
 * Assignment 2: Web Based User Login/Registration
