@@ -66,4 +66,4 @@ def execute_pipeline(userId, srcDir, srcName):
     write_landmarks(video_id, shapePoints)
     
 
-execute_pipeline(argv[1], argv[2], argv[3])
+execute_pipeline(argv[1], argv[2], bool(argv[3]))
