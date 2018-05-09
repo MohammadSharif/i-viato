@@ -15,6 +15,9 @@ class VideoContent extends Component {
 
   description() {
     if (this.props.video) {
+      if (this.props.video.description) {
+        return this.props.video.description;
+      }
       const resolution = `${this.props.video.width}x${this.props.video.height}`;
       const fps = this.props.video.fps;
       const frames = this.props.video.frames;

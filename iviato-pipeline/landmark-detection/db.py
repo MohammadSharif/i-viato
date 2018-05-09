@@ -64,15 +64,29 @@ def get_video(user_id, video_id):
     conn = connect()
     cursor = conn.cursor()
 
-    insert = """SELECT * from videos."videos{0}" WHERE videoid={1}""".format(user_id, video_id)   
+    query = """SELECT * from videos."videos{0}" WHERE videoid={1}""".format(user_id, video_id)   
     try:
-        cursor.execute(insert)
+        cursor.execute(query)
     except: 
         print('Unable to find video')
     
     video = cursor.fetchone()
     conn.close()
     return video
+
+def get_landmarks(video_id):
+    conn = connect()
+    cursor = conn.cursor()
+
+    query = """SELECT * from videos."landmarks" WHERE video_id={1}""".format(video_id)   
+    try:
+        cursor.execute(query)
+    except: 
+        print('Unable to find video')
+    
+    landmarks = cursor.fetchall()
+    conn.close()
+    return landmarks
 
 # return a connection object
 def connect():
