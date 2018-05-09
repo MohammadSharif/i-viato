@@ -35,7 +35,8 @@ def write_landmarks(video_id, shapeList):
         cursor.execute(insert)
     
     conn.commit()
-    conn.close()     
+    conn.close()
+
 def write_skull(video_id, skullList):
     conn = connect()
     cursor = conn.cursor()  
@@ -44,6 +45,7 @@ def write_skull(video_id, skullList):
         cursor.execute(insert)
     conn.commit()
     conn.close()   
+
 # image must follow the formate videoId_frameNumber.png
 # pupils[0] left eye (relative to user point of view of image)
 # pupils[1] right eye (relative to user point of view of image)
@@ -52,11 +54,25 @@ def write_pupils(video_id, pupilList):
     cursor = conn.cursor()
     for i in range(0, len(pupilList)):
         insert = """INSERT INTO develop."pupils"("videoId", "frameId", "left", "right", ftleft, ftright) VALUES ({0}, {1}, point{2}, point{3}, point{4}, point{5});""".format(video_id, i, pupilList[i][0], pupilList[i][1], pupilList[i][0], pupilList[i][1])
-        #print (insert)
+        # print (insert)
         cursor.execute(insert)
     
     conn.commit()
-    conn.close()     
+    conn.close()
+
+def get_video(user_id, video_id):
+    conn = connect()
+    cursor = conn.cursor()
+
+    insert = """SELECT * from videos."videos{0}" WHERE videoid={1}""".format(user_id, video_id)   
+    try:
+        cursor.execute(insert)
+    except: 
+        print('Unable to find video')
+    
+    video = cursor.fetchone()
+    conn.close()
+    return video
 
 # return a connection object
 def connect():
@@ -74,4 +90,3 @@ def connect():
         return conn
     except:
         print("***************** Unable to connect to postgres *****************")
-
