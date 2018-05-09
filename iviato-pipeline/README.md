@@ -1,26 +1,13 @@
 # i-viato Pipeline
-This repository will contain all work towards the visual recognition project. Please note that building this image
-for the first time will take a long time. After running `docker-compose build`, grab a coffee, play a game of PUBG,or go lift some weights.
 
+This directory contains the i-viato pipeline. To install the depenedencies required, please the below instructions. 
 
-To execute you must have docker then:  
-```
-$docker-compose build
-```  
+* Homebrew: Make sure you download and install homebrew on your mac by following the instructions stated [here](https://brew.sh/)
 
-Then:
-```
-$docker-compose up
-```
+After installing Homebrew, we can move on to the rest of the dependencies.
 
-Or if you want the bash:  
-```
-$docker-compose up -d  
-$docker exec -it django-apache2 bash 
-```
+* FFMPEG: Run the command `brew install ffmpeg`
 
-Once you're done with the execution run remove instance with:  
-```
-$docker-compose down
-```  
+* Python Libraries: Run the command `pip3 install requirements.txt`
 
+The Pipeline is designed to be invoked by the i-viato API located at `../iviato-api` and is not set up to be used as a standalone app. 
