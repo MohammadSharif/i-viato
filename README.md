@@ -1,4 +1,3 @@
-# WELCOME TO I-VIATO
 ![I-VIATO Logo](/iviato-ui/src/img/iviato.png)
 This README will contain the necessary links to navigate through our
 repository according to each major component to the application and pipeline.
