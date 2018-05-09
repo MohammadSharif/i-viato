@@ -84,7 +84,7 @@ def get_landmarks(video_id):
     except: 
         print('Unable to find video')
     
-    landmarks = cursor.fetchone()
+    landmarks = cursor.fetchall()
     conn.close()
     return landmarks
 
