@@ -72,4 +72,4 @@ def execute_pipeline(userId, srcDir, srcName):
         metaDataDict["video_id"] = video_id
         json.dump(metaDataDict, cache)
 
-execute_pipeline(argv[1], argv[2], argv[3])
+execute_pipeline(argv[1], argv[2], bool(argv[3]))
