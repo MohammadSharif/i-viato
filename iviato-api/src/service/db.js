@@ -69,7 +69,6 @@ module.exports.login = async (email, password, ip) => {
         query = `UPDATE develop.userdata SET ip='${ip}', login='${Date.now()}' WHERE "email"='${encrypt(email)}' AND "password"='${encrypt(password)}'`;
         const updated = await client.query(query); 
         console.log('Updated user login');
-        console.log(update);
       } catch(error) {
           console.log('Unable to update user');
           console.log(error);
