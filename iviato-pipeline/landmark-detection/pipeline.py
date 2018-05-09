@@ -5,6 +5,7 @@
 # Author:   Nicholas J. Hernandez - Hirad Pourtahmasbi
 # -----------------------------------------------------------------------------
 import os
+import json 
 from sys import argv
 from landmarks import detectLandmarks
 from subprocess import call
@@ -24,37 +25,6 @@ def execute_pipeline(userID, srcDir, srcName, isShinobi):
     print(f'{userId} - {srcDir} - {srcName}')
     videoSrc = srcDir + '/' + srcName 
     metaDataDict = extract_metadata(videoSrc)
-    
-    # Splitting up 
-    call([
-        movieToFrames, 
-        videoSrc, 
-        str(metaDataDict["fps"]), 
-        srcDir + """/frames%d.png"""
-    ])
-
-    # Processing
-    shapePoints = []
-    pupilPoints = []
-    skullPoints = []
-    print("Starting landmark detection...")
-    for i in range(1, metaDataDict["numframes"] + 1):
-        imgPath = srcDir + "/frames" + str(i) + ".png"
-        imgDest = srcDir + "/landmark" + str(i) + ".png"
-        tempDict = detectLandmarks(imgPath, imgDest, isShinobi)
-        shapePoints.append(tempDict["shape"])
-        pupilPoints.append(tempDict["pupils"])
-        skullPoints.append(tempDict["rotation"])
-    # Merging
-    print("Starting stiching up...")
-    call([
-        framesToMovie, 
-        str(metaDataDict["fps"]), 
-        str(metaDataDict["width"]) + "x" + str(metaDataDict["height"]), 
-        str(metaDataDict["numframes"]),
-        srcDir + """/landmark%d.png""", 
-        srcDir + "/out-" + srcName
-    ])
 
     video_id = write_metadata(
         userId, 
@@ -64,10 +34,48 @@ def execute_pipeline(userID, srcDir, srcName, isShinobi):
         metaDataDict["fps"], 
         metaDataDict["numframes"]
     )
+    
+    # Splitting up 
+    print("***************** Splitting up... *****************")
+    call([
+        movieToFrames, 
+        videoSrc, 
+        str(metaDataDict["fps"]), 
+        srcDir + """/frames%d.png"""
+    ])
+    
+    # Processing
+    shapePoints = []
+    pupilPoints = []
+
+    skullPoints = []
+    print("Starting landmark detection...")
+    print("***************** Starting landmark detection... *****************")
+    for i in range(1, metaDataDict["numframes"] + 1):
+        imgPath = srcDir + "/frames" + str(i) + ".png"
+        imgDest = srcDir + "/landmark" + str(i) + ".png"
+        tempDict = detectLandmarks(imgPath, imgDest, isShinobi)
+        shapePoints.append(tempDict["shape"])
+        pupilPoints.append(tempDict["pupils"])
+        skullPoints.append(tempDict["rotation"])
+    # Merging
+    print("***************** Starting stiching up... *****************")
+    call([
+        framesToMovie, 
+        str(metaDataDict["fps"]), 
+        str(metaDataDict["width"]) + "x" + str(metaDataDict["height"]), 
+        str(metaDataDict["numframes"]),
+        srcDir + """/landmark%d.png""", 
+        srcDir +  "/" + str(userId) + '_' + srcName
+    ])
+    
     write_pupils(video_id, pupilPoints)
     write_landmarks(video_id, shapePoints)
     write_skull(video_id, skullPoints)
 
-    
 
-execute_pipeline(argv[1], argv[2], bool(argv[3]))
+    with open(srcDir + "/" + str(userId) + '_' + srcName + '.json', 'w') as cache: 
+        metaDataDict["video_id"] = video_id
+        json.dump(metaDataDict, cache)
+
+execute_pipeline(argv[1], argv[2], argv[3], bool(argv[4]))

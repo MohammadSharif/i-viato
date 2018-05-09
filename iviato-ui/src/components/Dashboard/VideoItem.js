@@ -14,16 +14,16 @@ class VideoItem extends Component {
   }
 
   onComponentClick = () => {
-    this.props.onItemClick(this.props.url, this.props.title, this.props.description);
+    this.props.onItemClick(this.props.video);
   }
 
   render() {
     return (
       <div className="feedcontent" onClick={this.onComponentClick}>
-        <img src={this.props.videopreview} className="preview" />
+        <img src={this.props.video.imageurl} className="preview" />
         <div className="info">
-          <h6 className="video-title">{this.props.title}</h6>
-          <p className="duration">{this.props.duration}</p>
+          <h6 className="video-title">{this.props.video.filename}</h6>
+          <p className="duration">{Math.round(this.props.video.frames/this.props.video.fps)}</p>
         </div>
       </div>
     );

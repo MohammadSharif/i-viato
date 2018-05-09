@@ -20,14 +20,14 @@ module.exports.signup = async (first, last, email, password) => {
   client.connect();
   console.log('connected to postgres');
   let query = 'INSERT INTO develop.userdata(first, last, email, password) VALUES ($1, $2, $3, $4) RETURNING *';
-  let values = [first, last, email, password];
+  let values = [first, last, encrypt(email), encrypt(password)];
 
   try {
     const user = await client.query(query, values);
     console.log('Created user');
     const id = user.rows[0].id;
     
-    query = `CREATE TABLE videos.videos${id} (filename TEXT, url TEXT)`;
+    query = `CREATE TABLE videos.videos${id} (filename TEXT, url TEXT, width INT, height INT, frames INT, fps INT, videoid INT, imageurl TEXT)`;
     try {
       const table = await client.query(query);
       console.log('Created user table');
@@ -59,7 +59,7 @@ module.exports.login = async (email, password) => {
 
   client.connect();
   console.log('connected to postgres');
-  const query = `SELECT * FROM develop.userdata WHERE "email"='${email}' AND "password"='${password}'`;
+  const query = `SELECT * FROM develop.userdata WHERE "email"='${encrypt(email)}' AND "password"='${encrypt(password)}'`;
   
   try {
     const user = await client.query(query);
@@ -76,7 +76,7 @@ module.exports.login = async (email, password) => {
   client.end();
 };
 
-module.exports.videoUpload = async (id, name, videoUrl) => {
+module.exports.videoUpload = async (id, name, videoUrl, imageUrl, metadata) => {
   const client = new pg.Client({
     user: dbConfig.user,
     host: dbConfig.host,
@@ -87,8 +87,8 @@ module.exports.videoUpload = async (id, name, videoUrl) => {
 
   client.connect();
   console.log('connected to postgres');
-  const query = `INSERT INTO videos.videos${id}(filename, url) VALUES ($1, $2)`;
-  const values = [name, videoUrl];
+  const query = `INSERT INTO videos.videos${id}(filename, url, width, height, frames, fps, videoid, imageurl) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`;
+  const values = [name, videoUrl, metadata['width'], metadata['height'], metadata['numframes'], metadata['fps'], metadata['video_id'], imageUrl];
   // console.log(query);
   try {
     const upload = await client.query(query, values);
@@ -97,7 +97,7 @@ module.exports.videoUpload = async (id, name, videoUrl) => {
     client.end();
   } catch (error) {
     console.log('Unable to upload video location');
-    // console.log(error);
+    console.log(error);
     client.end();
   }
 };
@@ -117,6 +117,7 @@ module.exports.listVideos = async (id) => {
 
   try {
     const videos = await client.query(query);
+    console.log('Listed Videos');
     client.end();
     return videos.rows;
   } catch (error) {

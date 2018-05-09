@@ -11,6 +11,7 @@ const multer = require('multer');
 const path = require('path');
 const rimraf = require('rimraf');
 const spawn = require('child_process').spawn;
+const _ = require('lodash');
 
 const auth = config.get('auth0');
 const authorize = require('./service/auth').authorize;
@@ -20,7 +21,7 @@ const store = require('./service/storage').store;
 const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
-app.use(cors())
+app.use(cors({ origin: '*'}));
 
 const storage = multer.diskStorage({
   destination: '../iviato-storage/',
@@ -87,32 +88,34 @@ app.post('/login', async (req, res) => {
 
 // upload video
 app.post('/videos/upload/:id', [authCheck, upload.single('file')], (req, res) => {
-  
   const id = req.params.id;
   const file = req.file;
   const invokePath = path.resolve('../iviato-pipeline/landmark-detection/pipeline.py');
   const srcDir = path.resolve('../iviato-storage/')
   const srcName = file.originalname;
-  const tgtPath = srcDir + '/out-' + srcName;
+  const tgtPath = srcDir + `/${id}_` + srcName;
 
   if (fs.existsSync(tgtPath)) {
     console.log('***************************** Already Uploaded *****************************');
-    res.statusCode = 200; 
+    setTimeout( () => {
+      res.sendStatus(200);
+    }, 10000);
     return;
   } else {
     console.log('***************************** Uploading *****************************');
-    exec(`python3 ${invokePath} ${id} ${srcDir} ${srcName}`,
-    (error, stdout, stderr) => {
+    exec(`python3 ${invokePath} ${id} ${srcDir} ${srcName}`, (error, stdout, stderr) => {
       if (error) {
         console.log(error)
       }
       if (stderr) {
         console.log(stderr)
       }
-      console.log(stdout);
-      store(id, `${path.resolve('../iviato-storage/')}/out-${srcName}`);
-      console.log('***************************** Finished Processing *****************************');
-      res.statusCode = 201
+      // console.log(stdout);
+      store(id, `${path.resolve('../iviato-storage/')}/${id}_${srcName}`)
+        .then( () => {
+          console.log('***************************** Finished Processing *****************************');
+          res.sendStatus(201);
+        });
       return;
     });
   }
@@ -125,7 +128,7 @@ app.get('/videos/:id', authCheck, async (req, res) => {
   
   if (videos) {
     res.sendStatus = 200;
-    res.send(JSON.stringify(videos));
+    res.send(JSON.stringify(_.reverse(videos)));
   } else {
     res.sendStatus = 400;
   }

@@ -16,7 +16,7 @@ class LoginScreen extends Component {
       username:'',
       password:'',
       loginscreen:[],
-      isLogin:true
+      isLogin:true,
     }
   }
 
