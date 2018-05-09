@@ -1,6 +1,7 @@
 import os
 import psycopg2
 import re
+from configparser import ConfigParser
 
 def write_metadata(userId, fileName, width, height, fps, frame_number):
     id = None
@@ -52,13 +53,14 @@ def write_pupils(video_id, pupilList):
 
 # return a connection object
 def connect():
-    config = get_config()
-    config.read('credentials.ini')
-    host = config.get('Database', 'HOST')
-    port = config.get('Database', 'PORT')
-    name = config.get('Database', 'DATABASE')
-    username = config.get('Database', 'USERNAME')
-    password = config.get('Database', 'PASSWORD')
+    configPath = os.path.abspath('../iviato-pipeline/landmark-detection/credentials.ini')
+    parser = ConfigParser()
+    parser.read(configPath)
+    host = parser.get('default', 'host')
+    port = parser.get('default', 'port')
+    name = parser.get('default', 'database')
+    username = parser.get('default', 'username')
+    password = parser.get('default', 'password')
 
     try:
         conn = psycopg2.connect(host=host, port=port, dbname=name, user=username, password=password)
@@ -66,11 +68,3 @@ def connect():
     except:
         print("***************** Unable to connect to postgres *****************")
 
-# create a config parser for reading INI files 
-def get_config():
-	try:
-		import ConfigParser
-		return ConfigParser.ConfigParser()
-	except:
-		import configparser
-		return configparser.ConfigParser()
