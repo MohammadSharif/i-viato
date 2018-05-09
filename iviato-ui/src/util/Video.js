@@ -34,9 +34,12 @@ export async function list() {
 
   if (res.data) {
     const videos = _.uniqBy(res.data, 'filename');
-    setCurrentVideo(videos[0]);
-    setOtherVideos(videos.slice(1));
-    return videos;
+    if (videos) {
+      setCurrentVideo(videos[0]);
+      setOtherVideos(videos.slice(1));
+      return videos;
+    }
+    return false;
   } else {
     console.log('Unable to list videos');
     return false;
@@ -64,7 +67,8 @@ export function setCurrentVideo(video) {
 }
 
 export function getCurrentVideo() {
-  return JSON.parse(localStorage.getItem('current_video')) || {};
+  
+  return localStorage.getItem('current_video') ? JSON.parse(localStorage.getItem('current_video')) : {};
 }
 
 export function setOtherVideos(videos) {
@@ -72,7 +76,7 @@ export function setOtherVideos(videos) {
 }
 
 export function getOtherVideos() {
-  return JSON.parse(localStorage.getItem('other_videos')) || [];
+  return localStorage.getItem('current_video') ? JSON.parse(localStorage.getItem('other_videos')) : [];
 }
 
 export function getAllVideos() {

@@ -23,8 +23,6 @@ export async function signUp(first, last, email, password) {
   try {
     const response = await request(options);
     storeToken(JSON.parse(response));
-    setCurrentVideo({});
-    setOtherVideos([]);
     return true;
   } catch (error) {
     console.log(`-----Error: ${error}`);
