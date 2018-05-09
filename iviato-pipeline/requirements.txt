@@ -1,0 +1,6 @@
+psycopg2
+opencv-python
+dlib
+imutils
+numpy
+uuid
