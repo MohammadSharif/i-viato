@@ -24,7 +24,7 @@ predictorPath = os.path.abspath("../iviato-pipeline/landmark-detection/shape_pre
 detector = dlib.get_frontal_face_detector()
 # This is a function that we can call later on a shape
 predictor = dlib.shape_predictor(predictorPath)
-headband = cv2.imread("../iviato-pipeline/landmark-detection/leafHeadband.png")
+headband = cv2.imread("../iviato-pipeline/landmark-detection/leafHeadband.png", -1)
 #headband = cv2.imread("../landmark-detection/leafHeadband.png")
 
 def rect_to_tuple(rect):
@@ -110,7 +110,6 @@ def draw_delaunay(img, subdiv, delaunay_color) :
             cv2.line(img, pt3, pt1, delaunay_color, 1, cv2.LINE_AA, 0)
 
 def getYPRLine(size,shape, image, isShinobi):
-    print("filler")
     #2D image points. If you change the image, you need to change vector
     image_points = np.array([
                                 shape[30],     # Nose tip
@@ -200,31 +199,35 @@ def makeShinobi(image, shape):
     headbandWidth = (x2-x1)
     headbandHeight = (y2-y1)
     
-    resizedHeadband  = cv2.resize(headband, ( headbandWidth, headbandHeight), interpolation = cv2.INTER_AREA)
-    image[y1:y2, x1:x2]= resizedHeadband
+    resizedHeadband  = cv2.resize(headband, (headbandWidth, headbandHeight), interpolation = cv2.INTER_AREA)
+    
+    alpha_s = resizedHeadband[:, :, 3] / 255.0
+    alpha_l = 1.0 - alpha_s
+
+    for c in range(0, 3):
+        image[y1:y2, x1:x2, c] = (alpha_s * resizedHeadband[:, :, c] +
+                                  alpha_l * image[y1:y2, x1:x2, c])
+
+    #image[y1:y2, x1:x2]= resizedHeadband
 
 
 
 #will detect landmarks of image draw the delauny triangles and save the image to the 
 def detectLandmarks(imgPath, imgDest, isShinobi):
-
     # For better detection we need to get the image resizes and converted to grayscale
-    image = cv2.imread(imgPath)
+    image = cv2.imread(imgPath, -1)
     # image = small = cv2.resize(image, (0,0), fx=0.5, fy=0.5)
     size = image.shape
     
     rect = (0, 0, size[1], size[0])
     subdiv  = cv2.Subdiv2D(rect)
     gray = cv2.imread(imgPath, 0)
-    
     # We run the detection on the grayscale version of the image
     # Notice the variable "rects" is plural this is because there may
     # be mutliple faces detected within the image
     rects = detector(gray, 1)
-
     # Add each frames data to this list so we can write to db in the end
     # Loop over all detected faces in the image
-
     for i, rect in enumerate(rects):
         # get the detections and convert them into a numpy array
         shape = predictor(gray, rect)
@@ -233,17 +236,14 @@ def detectLandmarks(imgPath, imgDest, isShinobi):
         rotation_vector= getYPRLine(size, shape, image, isShinobi)
         if isShinobi:
             makeShinobi(image, shape)
-    
         # A list of two elements which are 2-tuples representing pupil coordinates.
         pupils = get_pupils(shape, gray)
         """
         @Hirad: The shape variable above this comment contains the list of coords
         for the facial landmark detection. That would be what needs to get pushed
         into the DB.
-
         The "pupils" variable is a list of 2 elements (each eye) the elements are
         2-tuples representing the eye coordinates.
-
         pupils[0] == left eye (relative to user point of view of image)
         pupils[1] == right eye (relative to user point of view of image)
         """

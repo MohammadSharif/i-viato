@@ -66,4 +66,4 @@ def execute_pipeline(srcDir, srcName, isShinobi):
 
     
 
-execute_pipeline(argv[1], argv[2], True)
+execute_pipeline(argv[1], argv[2], argv[3])
