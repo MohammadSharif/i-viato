@@ -1,4 +1,6 @@
-<div style="text-align:center"><img src="/iviato-ui/src/img/iviato.png" width="500"/></div>
+<p align="center">
+   <img src="/iviato-ui/src/img/iviato.png" width="500"/>
+</p>
 
 This README will contain the necessary links to navigate through our
 repository according to each major component to the application and pipeline.
@@ -48,7 +50,7 @@ The pipeline of the application is written using C and Python. We've also made u
 
 
 * Assignment 2: Web Based User Login/Registration
-For UI design we decided to go with React because of it's large community and plethora of component libraries. Our user login and registration page is a simple form that can toggle between login and sign up. We used the Raised Button and TextField components from the Material-UI library to give the sign in a simple look. Code can be found [here](/iviato-api)
+For UI design we decided to go with React because of it's large community and plethora of component libraries. Our user login and registration page is a simple form that can toggle between login and sign up. We used the Raised Button and TextField components from the Material-UI library to give the sign in a simple look. Code can be found [here](/i-viato/tree/develop/iviato-api)
 
 * Assignment 3: Extract Still Images from Video
     * Video Upload (UI) - The UI for uploading a video to our database is designed as a modal form which also displays the accepted file formats. On the click of our “Choose File” button the file selection window is opened. The user is able to change the file, cancel, or submit what they’ve selected. The UI also does not allow the user to select an incorrect file type so there is no need to update the user their file type was incorrect, by utilizing the “accepted” field of an input element we can narrow down the capability of file selection to only our accepted format.
@@ -70,4 +72,4 @@ For UI design we decided to go with React because of it's large community and pl
 3. Code for the query can be found [here](/iviato-pipeline/landmark-detection/db.py)
 And code for the drawing Delaunay triangles can be found [here](/iviato-pipeline/landmark-detection/db.py)
 4. We used FFMPEG to break apart the video to images the Code is written in C. The code takes in a link to a files also and has the functionality to put the frames back together after the pipeline is run. can be found [here](/iviato-pipeline/ffmpeg).
-5. We embed the video into our application dashboard which is only accessible to users who have logged in. With the use of [Video-React](https://github.com/video-react/video-react/) we are easily able to serve up a nice video player with controls available to the user.
+    5. We embed the video into our application dashboard which is only accessible to users who have logged in. With the use of [Video-React](https://github.com/video-react/video-react/) we are easily able to serve up a nice video player with controls available to the user.
