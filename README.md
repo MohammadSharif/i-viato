@@ -7,7 +7,7 @@ The application front end is implemented using HTML, CSS, and [ReactJS](https://
 React makes it easy to reuse stateful components and allows for efficient rendering. We also made use of the
 [Material UI](https://github.com/mui-org/material-ui) component library to help stylize our UI.  
 
-* [Application Back End](/iviato-api/)
+* [Application Back End](https://github.com/MohammadSharif/i-viato/tree/develop/iviato-api)
 The back end for the application is written using NodeJS.
 
 * [Application Pipeline Code](https://github.com/MohammadSharif/i-viato/tree/develop/iviato-pipeline)
@@ -17,15 +17,34 @@ The pipeline of the application is written using C and Python. We've also made u
 
 --- 
 ### Assignments 
-* Assignment 1: Database Schema
+
+* **Assignment 1:** Database Schema
   To satisfy this requirement, we set up 2 different schemas. 
     1. 'develop': This is a temporary schema used for our development. During deployment, we will migrate to 'production'. Inside this schema, we have 5 tables.
-        * Metadata - Used to store video metadata including associated user and video id.
-        * Landmarks - Used to store the landmark location of each frame with its associated video id and frame number.
-        * Pupils - Used to store the pupil location of each frame with its associated video id and frame number.
-        * Skull - Used to store the yaw/pitch/roll of each frame with its associated video id and frame number.
+        * Metadata - Used to store video metadata including assoicated user and video id.
+        
+        ![Metadata](/etc/database/Metadata.png)
+
+        * Landmarks - Used to store the landmark location of each frame with its assoicated video id and frame number.
+        
+        ![Landmarks](/etc/database/Landmarks.png)
+         
+        * Pupils - Used to store the pupil location of each frame with its assoicated video id and frame number.
+        
+        ![Pupils](/etc/database/Pupils.png)
+        
+        * Skull - Used to store the yaw/pitch/roll of each frame with its assoicated video id and frame number.
+        
+        ![Skull](/etc/database/Skull.png)
+        
         * Userdata - Used to store user information including name, encrypted email and password, and most recent IP address and login time.
+        
+        ![User Data](/etc/database/UserData.png)
+        
     2. 'videos': Each user will have its own table in this schema following the pattern `videos{id}`. This table keeps track of each uploaded video and its location. 
+        
+        ![Video Id](/etc/database/VideoId.png)
+  
 
 * Assignment 2: Web Based User Login/Registration
 For UI design we decided to go with React because of it's large community and plethora of component libraries. Our user login and registration page is a simple form that can toggle between login and sign up. We used the Raised Button and TextField components from the Material-UI library to give the sign in a simple look. Code can be found (here)[/i-viato/tree/develop/iviato-api]
@@ -33,7 +52,7 @@ For UI design we decided to go with React because of it's large community and pl
 * Assignment 3: Extract Still Images from Video
     * Video Upload (UI) - The UI for uploading a video to our database is designed as a modal form which also displays the accepted file formats. On the click of our “Choose File” button the file selection window is opened. The user is able to change the file, cancel, or submit what they’ve selected. The UI also does not allow the user to select an incorrect file type so there is no need to update the user their file type was incorrect, by utilizing the “accepted” field of an input element we can narrow down the capability of file selection to only our accepted format.
   * Video Upload (Back End) - 
-  * Video Metadata - Video metadata was found using the python CV2 library and implementation for it can be found [here](/iviato-pipeline/landmark-detection/metadata.py). 
+  * Video Metadata - Video metadata was found using the python CV2 library and implementation for it can be found (here)[/iviato-pipeline/landmark-detection/metadata.py]. 
   * Extracting Still Images - We used FFMPEG to break apart the video to images the Code is written in C. The code takes in a link to a file on the file system and will expand the frames and  also has the functionality to put the frames back together after the pipeline is run. can be found [here](/iviato-pipeline/ffmpeg).
 
 * Assignment 4: Determine Facial Landmarks
