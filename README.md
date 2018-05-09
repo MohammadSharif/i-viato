@@ -48,12 +48,12 @@ The pipeline of the application is written using C and Python. We've also made u
 
 
 * Assignment 2: Web Based User Login/Registration
-For UI design we decided to go with React because of it's large community and plethora of component libraries. Our user login and registration page is a simple form that can toggle between login and sign up. We used the Raised Button and TextField components from the Material-UI library to give the sign in a simple look. Code can be found (here)[/i-viato/tree/develop/iviato-api]
+For UI design we decided to go with React because of it's large community and plethora of component libraries. Our user login and registration page is a simple form that can toggle between login and sign up. We used the Raised Button and TextField components from the Material-UI library to give the sign in a simple look. Code can be found [here](/i-viato/tree/develop/iviato-api)
 
 * Assignment 3: Extract Still Images from Video
     * Video Upload (UI) - The UI for uploading a video to our database is designed as a modal form which also displays the accepted file formats. On the click of our “Choose File” button the file selection window is opened. The user is able to change the file, cancel, or submit what they’ve selected. The UI also does not allow the user to select an incorrect file type so there is no need to update the user their file type was incorrect, by utilizing the “accepted” field of an input element we can narrow down the capability of file selection to only our accepted format.
   * Video Upload (Back End) -
-  * Video Metadata - Video metadata was found using the python CV2 library and implementation for it can be found (here)[/iviato-pipeline/landmark-detection/metadata.py].
+  * Video Metadata - Video metadata was found using the python CV2 library and implementation for it can be found [here](/iviato-pipeline/landmark-detection/metadata.py).
   * Extracting Still Images - We used FFMPEG to break apart the video to images the Code is written in C. The code takes in a link to a file on the file system and will expand the frames and  also has the functionality to put the frames back together after the pipeline is run. can be found [here](/iviato-pipeline/ffmpeg).
 
 * Assignment 4: Determine Facial Landmarks
