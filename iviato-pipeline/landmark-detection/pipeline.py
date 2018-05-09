@@ -70,4 +70,4 @@ def execute_pipeline(userID, srcDir, srcName, isShinobi):
 
     
 
-execute_pipeline(argv[1], argv[2], argv[3])
+execute_pipeline(argv[1], argv[2], bool(argv[3]))
