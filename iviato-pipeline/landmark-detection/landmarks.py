@@ -238,15 +238,6 @@ def detectLandmarks(imgPath, imgDest, isShinobi):
             makeShinobi(image, shape)
         # A list of two elements which are 2-tuples representing pupil coordinates.
         pupils = get_pupils(shape, gray)
-        """
-        @Hirad: The shape variable above this comment contains the list of coords
-        for the facial landmark detection. That would be what needs to get pushed
-        into the DB.
-        The "pupils" variable is a list of 2 elements (each eye) the elements are
-        2-tuples representing the eye coordinates.
-        pupils[0] == left eye (relative to user point of view of image)
-        pupils[1] == right eye (relative to user point of view of image)
-        """
         # draw facial landmarks on the image
         if not isShinobi:
             for x, y in shape:
@@ -260,4 +251,5 @@ def detectLandmarks(imgPath, imgDest, isShinobi):
     #cv2.imshow("Output", image)
     #cv2.waitKey(0)
     return {"shape":shape, "pupils":pupils, "rotation": rotation_vector}
+
 

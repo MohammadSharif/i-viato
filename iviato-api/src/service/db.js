@@ -1,72 +1,126 @@
 const config = require('config');
+const pg = require('pg');
+
 const crypto = require('./crypto');
 const encrypt = crypto.encrypt;
 const decrypt = crypto.decrypt;
-const pg = require('pg');
 const dbConfig = config.get('database');
 
-const client = new pg.Client({
-  user: dbConfig.user,
-  host: dbConfig.host,
-  database: dbConfig.db,
-  password: dbConfig.password,
-  port: dbConfig.password,
-});
-
-function signup(email, password, firstName, lastName) {
+module.exports.signup = async (first, last, email, password) => {
   if (!email || !password) { return false; }
-  firstName = firstName || '';
-  lastName = lastName || '';
 
-  client.connect((err) => {
-    if (err) {
-      console.error('connection error', err.stack)
-      return false
-    } else {
-      console.log('connected to postgres')
-      var queryText = 'INSERT INTO users."user-data"("firstName", "lastName", "accountName", "passphrase") VALUES($1, $2, $3,$4)'
-      client.query(queryText, [firstName, lastName, email, password], function(err, result) {
-        if(err) {
-          console.log('Unable to create')
-          console.log(err);
-          client.end();
-          return false
-        } else {
-          console.log('User created')
-          client.end();
-          return true
-        }
-      });
-    }
+  const client = new pg.Client({
+    user: dbConfig.user,
+    host: dbConfig.host,
+    database: dbConfig.db,
+    password: dbConfig.password,
+    port: dbConfig.port,
   });
-}
 
-function login(email, password) {
-  if (!email || !password) { return false; }
-  client.connect((err) => {
-    if (err) {
-      console.error('connection error', err.stack)
-      return false
-    } else {
-      console.log('connected to postgres')
-      var queryText = `SELECT * FROM users."user-data" WHERE "accountName"='${email}' AND "passphrase"='${password}'`
-      client.query(queryText, function(err, result) {
-        if(err) {
-          console.log('Unable to login')
-          console.log(err);
-          client.end();
-          return false
-        } else {
-          console.log('Logged In');
-          client.end();
-          return true
-        }
-      });
+  client.connect();
+  console.log('connected to postgres');
+  let query = 'INSERT INTO develop.userdata(first, last, email, password) VALUES ($1, $2, $3, $4) RETURNING *';
+  let values = [first, last, email, password];
+
+  try {
+    const user = await client.query(query, values);
+    console.log('Created user');
+    const id = user.rows[0].id;
+    
+    query = `CREATE TABLE videos.videos${id} (filename TEXT, url TEXT)`;
+    try {
+      const table = await client.query(query);
+      console.log('Created user table');
+    } catch (err) {
+      console.log('Unable to create table');
+      // console.log(err);
     }
-  })
+    client.end();
+    return id;
+  } catch (err) {
+    console.log('Unable to create user');
+    // console.log(err);
+    client.end();
+    return;
+  }
+  client.end();
 }
 
-module.exports = {
-  signup,
-  login
+module.exports.login = async (email, password) => {
+  if (!email || !password) { return false; }
+
+  const client = new pg.Client({
+    user: dbConfig.user,
+    host: dbConfig.host,
+    database: dbConfig.db,
+    password: dbConfig.password,
+    port: dbConfig.port,
+  });
+
+  client.connect();
+  console.log('connected to postgres');
+  const query = `SELECT * FROM develop.userdata WHERE "email"='${email}' AND "password"='${password}'`;
+  
+  try {
+    const user = await client.query(query);
+    if (user) {
+      console.log('Found user');
+      client.end()      
+      return user.rows[0].id; 
+    }
+  } catch(error) {
+    console.log('Unable to find user');
+    console.log(error);
+    client.end();
+  }
+  client.end();
+};
+
+module.exports.videoUpload = async (id, name, videoUrl) => {
+  const client = new pg.Client({
+    user: dbConfig.user,
+    host: dbConfig.host,
+    database: dbConfig.db,
+    password: dbConfig.password,
+    port: dbConfig.port,
+  });
+
+  client.connect();
+  console.log('connected to postgres');
+  const query = `INSERT INTO videos.videos${id}(filename, url) VALUES ($1, $2)`;
+  const values = [name, videoUrl];
+  // console.log(query);
+  try {
+    const upload = await client.query(query, values);
+    // console.log(upload);
+    console.log('Uploaded video location');
+    client.end();
+  } catch (error) {
+    console.log('Unable to upload video location');
+    // console.log(error);
+    client.end();
+  }
+};
+
+module.exports.listVideos = async (id) => {
+  const client = new pg.Client({
+    user: dbConfig.user,
+    host: dbConfig.host,
+    database: dbConfig.db,
+    password: dbConfig.password,
+    port: dbConfig.port,
+  });
+
+  client.connect();
+  console.log('connected to postgres');
+  const query = `SELECT * FROM videos.videos${id}`; 
+
+  try {
+    const videos = await client.query(query);
+    client.end();
+    return videos.rows;
+  } catch (error) {
+    console.log(error);
+    client.end();
+  }
 };

@@ -6,3 +6,4 @@
 iviato-api/config/default.json
 
 iviato-storage/*
+*.ini

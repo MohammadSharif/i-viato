@@ -3,7 +3,7 @@
 # Purpose:  Given a path to a video file, extract the metadata of the video and 
 #           return it.
 #
-#
+# Author:   Hirad Pourtahmasbi  
 # -----------------------------------------------------------------------------
 import cv2
 import numpy as np

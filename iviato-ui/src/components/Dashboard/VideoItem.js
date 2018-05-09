@@ -13,9 +13,13 @@ class VideoItem extends Component {
     super(props);
   }
 
+  onComponentClick = () => {
+    this.props.onItemClick(this.props.url, this.props.title, this.props.description);
+  }
+
   render() {
     return (
-      <div className="feedcontent">
+      <div className="feedcontent" onClick={this.onComponentClick}>
         <img src={this.props.videopreview} className="preview" />
         <div className="info">
           <h6 className="video-title">{this.props.title}</h6>

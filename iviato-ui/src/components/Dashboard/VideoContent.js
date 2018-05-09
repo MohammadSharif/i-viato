@@ -5,6 +5,9 @@ import logo from '../../img/iviato.png';
 import { Player } from 'video-react';
 import ReactVideo from 'react.video';
 
+import { getVideo } from '../../util/Video';
+
+const path = require('path');
 
 /**
  * The VideoContent class encapsulates the dashboard's media player and relevant
@@ -14,16 +17,7 @@ import ReactVideo from 'react.video';
 class VideoContent extends Component {
   constructor(props){
     super(props);
-
-    this.state = {
-      videoSrc: '/Users/hirad/Dev/i-viato/iviato-storage/out-nick.mov'
-    };
-
-    console.log(this.state.videoSrc);
-  }
-
-  setSource(src) {
-    this.setState({videoSrc: src })
+    // console.log(this.state.videoSrc);
   }
 
   render() {
@@ -31,8 +25,10 @@ class VideoContent extends Component {
       <div className="videocontent">
         <Player
           playsInline
+          // poster={require("../../img/background.jpg")}
+          // src={require("../../img/nick.mov")}
           poster="/img/background.jpg"
-          src="/Users/hirad/Dev/i-viato/iviato-storage/out-nick.mov.mp4"
+          src="https://s3.us-east-2.amazonaws.com/iviato-videos/33-out-nick"
         />
         <div className="info">
           <h2 className="title">Video Title</h2>
