@@ -6,7 +6,7 @@ const encrypt = crypto.encrypt;
 const decrypt = crypto.decrypt;
 const dbConfig = config.get('database');
 
-module.exports.signup = async (first, last, email, password) => {
+module.exports.signup = async (first, last, email, password, ip) => {
   if (!email || !password) { return false; }
 
   const client = new pg.Client({
@@ -19,8 +19,8 @@ module.exports.signup = async (first, last, email, password) => {
 
   client.connect();
   console.log('connected to postgres');
-  let query = 'INSERT INTO develop.userdata(first, last, email, password) VALUES ($1, $2, $3, $4) RETURNING *';
-  let values = [first, last, encrypt(email), encrypt(password)];
+  let query = 'INSERT INTO develop.userdata(first, last, email, password, ip, login) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *';
+  let values = [first, last, encrypt(email), encrypt(password), ip, Date.now()];
 
   try {
     const user = await client.query(query, values);
@@ -46,7 +46,7 @@ module.exports.signup = async (first, last, email, password) => {
   client.end();
 }
 
-module.exports.login = async (email, password) => {
+module.exports.login = async (email, password, ip) => {
   if (!email || !password) { return false; }
 
   const client = new pg.Client({
@@ -59,13 +59,22 @@ module.exports.login = async (email, password) => {
 
   client.connect();
   console.log('connected to postgres');
-  const query = `SELECT * FROM develop.userdata WHERE "email"='${encrypt(email)}' AND "password"='${encrypt(password)}'`;
+  let query = `SELECT * FROM develop.userdata WHERE "email"='${encrypt(email)}' AND "password"='${encrypt(password)}'`;
   
   try {
     const user = await client.query(query);
     if (user) {
       console.log('Found user');
-      client.end()      
+      try {
+        query = `UPDATE develop.userdata SET ip='${ip}', login='${Date.now()}' WHERE "email"='${encrypt(email)}' AND "password"='${encrypt(password)}'`;
+        const updated = await client.query(query); 
+        console.log('Updated user login');
+      } catch(error) {
+          console.log('Unable to update user');
+          console.log(error);
+          client.end();
+        }
+      client.end();   
       return user.rows[0].id; 
     }
   } catch(error) {

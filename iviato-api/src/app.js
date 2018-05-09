@@ -53,8 +53,9 @@ app.post('/signup', async (req, res) => {
   const last = req.body.last;
   const email = req.body.email;
   const password = req.body.password;
+  const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
   
-  const id = await db.signup(first, last, email, password);
+  const id = await db.signup(first, last, email, password, ip);
   if (id) {
     let auth = await authorize();
     let body = {
@@ -71,8 +72,9 @@ app.post('/signup', async (req, res) => {
 app.post('/login', async (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
+  const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
 
-  const id = await db.login(email, password);
+  const id = await db.login(email, password, ip);
   const auth = await authorize();
   if (id) {
     let body = {
