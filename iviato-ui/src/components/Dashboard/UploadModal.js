@@ -45,7 +45,7 @@ class UploadModal extends Component {
    */
    handleUploadClick(event){
     this.props.toggleLoading(false);
-    upload(this.state.video)
+    upload(this.state.video, this.props.isShinobi)
       .then( (res) => {
         this.props.toggleLoading(true);
       });

@@ -181,6 +181,7 @@ class MainDashboard extends Component {
       return (
         <div className="maindashboard">
           <UploadModal
+            isShinobi={this.state.shinobify}
             toggled={this.state.modal}
             onClick={() => this.handleModalComplete()}
             toggleLoading={this.toggleLoading}

@@ -5,12 +5,13 @@ const _ = require('lodash');
 const api = require('./config/Default').api;
 const isAuthorized = require('./User').isAuthorized;
 
-export async function upload(file) {
+export async function upload(file, shinobify) {
   if (!file) { return false; }
 
   const authorization = isAuthorized();
   const form = new FormData();
   form.append('file', file);
+  form.append('shinobi', shinobify);
   const token = `Bearer ${authorization.token}`;
 
   const result = await axios.post(api.base + api.upload + `/${authorization.id}`, form, {
@@ -34,7 +35,7 @@ export async function list() {
 
   if (res.data) {
     const videos = _.uniqBy(res.data, 'filename');
-    if (videos) {
+    if (videos && videos.length > 0) {
       setCurrentVideo(videos[0]);
       setOtherVideos(videos.slice(1));
       return videos;

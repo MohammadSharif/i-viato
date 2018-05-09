@@ -10,11 +10,11 @@
 import cv2
 import dlib
 import imutils
+import math
 import numpy as np
 import os
-from pupils import find_eye_center
-import math
 
+from pupils import find_eye_center
 
 # The path is in relative to the API code, hence we're going back up a directory
 predictorPath = os.path.abspath("../iviato-pipeline/landmark-detection/shape_predictor_68_face_landmarks.dat")
@@ -27,6 +27,7 @@ predictor = dlib.shape_predictor(predictorPath)
 headband = cv2.imread("../iviato-pipeline/landmark-detection/leafHeadband.png", -1)
 #headband = cv2.imread("../landmark-detection/leafHeadband.png")
 
+
 def rect_to_tuple(rect):
     """
     Meant to convert the dlib bounding rectangle prediction
@@ -38,6 +39,7 @@ def rect_to_tuple(rect):
     width = rect.width()
     height = rect.height()
     return (x, y, width, height)
+
 
 def get_pupils(coords, image):
     """
@@ -63,6 +65,7 @@ def get_pupils(coords, image):
     center2 = (x2 + cx2, y2 + cy2)
     return [center1, center2]
 
+
 def shape_to_coord_list(shape, gray):
     """
     Takes the dlib face detection shape (the 68 coordinates) and
@@ -76,6 +79,7 @@ def shape_to_coord_list(shape, gray):
     for i in range(0, 68):
         coords[i] = (shape.part(i).x, shape.part(i).y)
     return coords
+
 
 # Check if a point is inside a rectangle
 def rect_contains(rect, point) :
@@ -95,6 +99,7 @@ def rect_contains(rect, point) :
         return False
     return True
 
+
 # Draw delaunay triangles
 def draw_delaunay(img, subdiv, delaunay_color) :
     triangleList = subdiv.getTriangleList()
@@ -109,8 +114,9 @@ def draw_delaunay(img, subdiv, delaunay_color) :
             cv2.line(img, pt2, pt3, delaunay_color, 1, cv2.LINE_AA, 0)
             cv2.line(img, pt3, pt1, delaunay_color, 1, cv2.LINE_AA, 0)
 
+
 def getYPRLine(size,shape, image, isShinobi):
-    #2D image points. If you change the image, you need to change vector
+    # 2D image points. If you change the image, you need to change vector
     image_points = np.array([
                                 shape[30],     # Nose tip
                                 shape[8],      # Chin
@@ -142,45 +148,44 @@ def getYPRLine(size,shape, image, isShinobi):
                              [0, 0, 1]], dtype = "double"
                              )
      
-    #print ("Camera Matrix :\n {0}".format(camera_matrix))
+    # print ("Camera Matrix :\n {0}".format(camera_matrix))
      
     dist_coeffs = np.zeros((4,1)) # Assuming no lens distortion
     (success, rotation_vector, translation_vector) = cv2.solvePnP(model_points, image_points, camera_matrix, dist_coeffs, flags=cv2.SOLVEPNP_ITERATIVE)
      
     print ("Rotation Vector:\n {0}".format(rotation_vector))
-    #print ("Translation Vector:\n {0}".format(translation_vector))
+    # print ("Translation Vector:\n {0}".format(translation_vector))
      
      
     # Project a 3D point (0, 0, 1000.0) onto the image plane.
     # We use this to draw a line sticking out of the nose
      
-    if not isShinobi:      
-        (nose_end_point2D, jacobian) = cv2.projectPoints(np.array([(0.0, 0.0, 1000.0)]), rotation_vector, translation_vector, camera_matrix, dist_coeffs)
+    # if not isShinobi:      
+        # (nose_end_point2D, jacobian) = cv2.projectPoints(np.array([(0.0, 0.0, 1000.0)]), rotation_vector, translation_vector, camera_matrix, dist_coeffs)
          
-        for p in image_points:
-            cv2.circle(image, (int(p[0]), int(p[1])), 3, (0,0,255), -1)
+        # for p in image_points:
+        #     cv2.circle(image, (int(p[0]), int(p[1])), 3, (0,0,255), -1)
          
          
-        p1 = ( int(image_points[0][0]), int(image_points[0][1]))
-        p2 = ( int(nose_end_point2D[0][0][0]), int(nose_end_point2D[0][0][1]))
+        # p1 = ( int(image_points[0][0]), int(image_points[0][1]))
+        # p2 = ( int(nose_end_point2D[0][0][0]), int(nose_end_point2D[0][0][1]))
          
-        cv2.line(image, p1, p2, (255,0,0), 2)
+        # cv2.line(image, p1, p2, (255,0,0), 2)
      
     # Display image
     return rotation_vector
-
 
 
 def makeShinobi(image, shape):
     w = image.shape[0]
     h = image.shape[1]
     print("top of head: "+str(shape[27]))
-    #shape30 --> nose tip
-    #shape27 --> top of nose
-    #pythagoran thm to get distance
+    # shape30 --> nose tip
+    # shape27 --> top of nose
+    # pythagoran thm to get distance
     noseLength = math.sqrt(math.pow(shape[8][1] - shape[27][1], 2)+math.pow(shape[8][1] - shape[27][1], 2))/4.2
     
-    #will be used to set the height of the headband
+    # will be used to set the height of the headband
     headbandShape = headband.shape
     headbandWidth = headbandShape[1]*(noseLength/headbandShape[0])
     x1 = int(shape[27][0]- (headbandWidth/2))
@@ -211,8 +216,7 @@ def makeShinobi(image, shape):
     #image[y1:y2, x1:x2]= resizedHeadband
 
 
-
-#will detect landmarks of image draw the delauny triangles and save the image to the 
+# will detect landmarks of image draw the delauny triangles and save the image to the 
 def detectLandmarks(imgPath, imgDest, isShinobi):
     # For better detection we need to get the image resizes and converted to grayscale
     image = cv2.imread(imgPath, -1)
@@ -241,15 +245,15 @@ def detectLandmarks(imgPath, imgDest, isShinobi):
         # draw facial landmarks on the image
         if not isShinobi:
             for x, y in shape:
-                #print("(" + str(x) + ", " + str(y) +")")
+                # print("(" + str(x) + ", " + str(y) +")")
                 cv2.circle(image, (x, y), 2, (255, 255, 255), -1)
                 subdiv.insert((x,y))
             draw_delaunay( image, subdiv, (255, 255, 255))
     # show the output image with detections and landmarks
-    #image = small = cv2.resize(image, (0,0), fx=0.5, fy=0.5)
+    # image = small = cv2.resize(image, (0,0), fx=0.5, fy=0.5)
     cv2.imwrite(imgDest, image)
-    #cv2.imshow("Output", image)
-    #cv2.waitKey(0)
+    # cv2.imshow("Output", image)
+    # cv2.waitKey(0)
     return {"shape":shape, "pupils":pupils, "rotation": rotation_vector}
 
 

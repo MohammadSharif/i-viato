@@ -90,6 +90,7 @@ app.post('/login', async (req, res) => {
 app.post('/videos/upload/:id', [authCheck, upload.single('file')], (req, res) => {
   const id = req.params.id;
   const file = req.file;
+  const shinobi = req.body.shinobi; 
   const invokePath = path.resolve('../iviato-pipeline/landmark-detection/pipeline.py');
   const srcDir = path.resolve('../iviato-storage/')
   const srcName = file.originalname;
@@ -103,7 +104,7 @@ app.post('/videos/upload/:id', [authCheck, upload.single('file')], (req, res) =>
     return;
   } else {
     console.log('***************************** Uploading *****************************');
-    exec(`python3 ${invokePath} ${id} ${srcDir} ${srcName}`, (error, stdout, stderr) => {
+    exec(`python3 ${invokePath} ${id} ${srcDir} ${srcName} ${shinobi}`, (error, stdout, stderr) => {
       if (error) {
         console.log(error)
       }
