@@ -14,3 +14,16 @@ The back end for the application is written using NodeJS.
 The pipeline of the application is written using C and Python. We've also made use of Tristan Hume's
 [eyeLike](https://github.com/trishume/eyeLike) for pupil tracking, [dlib](https://github.com/davisking/dlib),
 [OpenCV](https://github.com/opencv/opencv), and [ffmpeg](https://github.com/FFmpeg/FFmpeg)
+
+--- 
+### Assignments 
+* Assignment 1: Database Schema
+  To satisfy this requirement, we set up 2 different schemas. 
+    1. 'develop': This is a temporary schema used for our development. During deployment, we will migrate to 'production'. Inside this schema, we have 5 tables.
+        * Metadata - Used to store video metadata including assoicated user and video id.
+        * Landmarks - Used to store the landmark location of each frame with its assoicated video id and frame number.
+        * Pupils - Used to store the pupil location of each frame with its assoicated video id and frame number.
+        * Skull - Used to store the yaw/pitch/roll of each frame with its assoicated video id and frame number.
+        * Userdata - Used to store user information including name, encrypted email and password, and most recent IP address and login time.
+    2. 'videos': Each user will have its own table in this schema following the pattern `videos{id}`. This table keeps track of each uploaded video and its location. 
+  
