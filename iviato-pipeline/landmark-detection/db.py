@@ -41,7 +41,7 @@ def write_skull(video_id, skullList):
     conn = connect()
     cursor = conn.cursor()  
     for i in range(0, len(skullList)):
-        insert = 'INSERT INTO develop."skull"(videoid, frameid, yaw, pitch, roll ) VALUES ({0}, {1}, {2}, {3}, {4});'.format(video_id, i, skullList[i][0][0], skullList[i][1][0], skullList[i][2][0])
+        insert = 'INSERT INTO develop."skull"(videoid, frameid, yaw, pitch, roll ) VALUES ({0}, {1}, {2}, {3}, {4});'.format(video_id, i, skullList[i][0][1], skullList[i][1][1], skullList[i][2][1])
         cursor.execute(insert)
     conn.commit()
     conn.close()   

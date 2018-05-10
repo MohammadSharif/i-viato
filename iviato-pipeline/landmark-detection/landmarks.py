@@ -160,22 +160,34 @@ def getYPRLine(size,shape, image, isShinobi):
     # Project a 3D point (0, 0, 1000.0) onto the image plane.
     # We use this to draw a line sticking out of the nose
      
-    # if not isShinobi:      
-        # (nose_end_point2D, jacobian) = cv2.projectPoints(np.array([(0.0, 0.0, 1000.0)]), rotation_vector, translation_vector, camera_matrix, dist_coeffs)
-         
-        # for p in image_points:
-        #     cv2.circle(image, (int(p[0]), int(p[1])), 3, (0,0,255), -1)
-         
-         
-        # p1 = ( int(image_points[0][0]), int(image_points[0][1]))
-        # p2 = ( int(nose_end_point2D[0][0][0]), int(nose_end_point2D[0][0][1]))
-         
-        # cv2.line(image, p1, p2, (255,0,0), 2)
+    R = eulerAnglesToRotationMatrix([success, rotation_vector, translation_vector]) 
      
     # Display image
     return rotation_vector
 
-
+def eulerAnglesToRotationMatrix(theta) :
+     
+    R_x = np.array([[1,         0,                  0                   ],
+                    [0,         math.cos(theta[0]), -math.sin(theta[0]) ],
+                    [0,         math.sin(theta[0]), math.cos(theta[0])  ]
+                    ])
+         
+         
+                     
+    R_y = np.array([[math.cos(theta[1]),    0,      math.sin(theta[1])  ],
+                    [0,                     1,      0                   ],
+                    [-math.sin(theta[1]),   0,      math.cos(theta[1])  ]
+                    ])
+                 
+    R_z = np.array([[math.cos(theta[2]),    -math.sin(theta[2]),    0],
+                    [math.sin(theta[2]),    math.cos(theta[2]),     0],
+                    [0,                     0,                      1]
+                    ])
+                     
+                     
+    R = np.dot(R_z, np.dot( R_y, R_x ))
+    print (R)
+    return R
 def makeShinobi(image, shape):
     w = image.shape[0]
     h = image.shape[1]
@@ -256,4 +268,6 @@ def detectLandmarks(imgPath, imgDest, isShinobi):
     # cv2.waitKey(0)
     return {"shape":shape, "pupils":pupils, "rotation": rotation_vector}
 
-
+if __name__ == '__main__':
+    main()
+main
