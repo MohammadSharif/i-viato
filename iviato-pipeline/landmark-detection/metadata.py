@@ -24,11 +24,14 @@ def extract_metadata(path):
         resolution = "{0}x{1}".format(width, height)
         fps = round(cap.get(5)) 
         frame_number = round(cap.get(7)) 
+
+        duration = frame_number / fps
+
     else:
         return None
     cap.release()
     cv2.destroyAllWindows()
     #write_to_db(path, width, height, fps, frame_number)
-    return {"path": path, "width": width, "height": height, "fps": fps, "numframes": frame_number}
+    return {"path": path, "width": width, "height": height, "fps": 15, "numframes": round(duration * 15)}
 
 

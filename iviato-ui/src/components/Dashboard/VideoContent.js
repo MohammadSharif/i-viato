@@ -30,10 +30,9 @@ class VideoContent extends Component {
   render() {
     return (
       <div className="videocontent">
-        <Player
-          playsInline
-          src={this.props.video ? this.props.video.url : ''}
-        />
+        <Player>
+          <source src={this.props.video ? this.props.video.url : ''} />
+        </Player>
         <div className="info">
           <h2 className="title">{this.props.video ? this.props.video.filename : ''}</h2>
           <p className="description">{this.description()}</p>
