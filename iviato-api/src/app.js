@@ -113,7 +113,7 @@ app.post('/videos/upload/:id', [authCheck, upload.single('file')], (req, res) =>
       if (stderr) {
         console.log(stderr)
       }
-      // console.log(stdout);
+      console.log(stdout);
       store(id, `${path.resolve('../iviato-storage/')}/${id}_${srcName}`)
         .then( () => {
           console.log('***************************** Finished Processing *****************************');
