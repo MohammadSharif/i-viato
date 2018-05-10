@@ -43,8 +43,8 @@ class MainDashboard extends Component {
       // The uploads portion of the state should contain the JSON
       // for all of the current users uploaded videos
       // (i.e. preview, title, duration, etc.)
-      currentVideo: {},
-      uploads: []
+      currentVideo: getCurrentVideo(),
+      uploads: getOtherVideos()
     }
   }
 
