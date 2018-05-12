@@ -14,9 +14,11 @@ module.exports = {
 			loader: 'babel-loader'
 		}, {
 			test: /\.(less)$/,
+			exclude: /node_modules/,
 			loaders: ["style-loader", "css-loder", "less-loader"]
 		}, {
 			test: /\.scss$/,
+			exclude: /node_modules/,
 			use: [
 					"style-loader", // creates style nodes from JS strings
 					"css-loader", // translates CSS into CommonJS
