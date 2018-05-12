@@ -1,8 +1,0 @@
-version: "0.1"
-
-services:
-  pipeline:
-    build: .
-    container_name: pipeline
-    ports:
-      - 8081
