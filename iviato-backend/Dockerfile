@@ -74,10 +74,5 @@ RUN pip3 install numpy
 RUN pip3 install uuid
 RUN pip3 install psycopg2-binary
 
-# demo purposes
-# RUN mkdir /usr/src/app/iviato-storage
-# COPY iviato-storage/demo-original.mov /usr/src/app/iviato-storage/demo-original.mov 
-# COPY iviato-storage/demo-shinobi.mov /usr/src/app/iviato-storage/demo-shinobi.mov 
-
 # start app
 CMD ["npm", "start"]
