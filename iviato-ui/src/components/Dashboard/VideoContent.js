@@ -31,7 +31,7 @@ class VideoContent extends Component {
     return (
       <div className="videocontent">
         <Player>
-          <source src={this.props.video ? this.props.video.url : ''} />
+          <source src={this.props.video.url}/>
         </Player>
         <div className="info">
           <h2 className="title">{this.props.video ? this.props.video.filename : ''}</h2>

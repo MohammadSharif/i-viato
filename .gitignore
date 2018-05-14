@@ -5,5 +5,7 @@
 *.pyc
 iviato-api/config/default.json
 
-iviato-storage/*
+iviato-backend/iviato-storage/*
 *.ini
+iviato-backend/aws.txt
+iviato-ui/build

@@ -11,7 +11,7 @@ module.exports.store = async (userId, filePath) => {
   const pathObject = path.parse(filePath);
   const s3 = new AWS.S3();
 
-  fs.readFile(pathObject.dir + '/landmark1.png', (err, data) => {
+  fs.readFile(pathObject.dir + '/' + pathObject.name + '.png', (err, data) => {
     if (err) {
       console.log(err);
     }
@@ -41,6 +41,6 @@ module.exports.store = async (userId, filePath) => {
 
   const videoUrl = `https://s3.${S3_CONFIG.region}.amazonaws.com/${S3_CONFIG.bucket}/${pathObject.base}`;
   const imageUrl = `https://s3.${S3_CONFIG.region}.amazonaws.com/${S3_CONFIG.bucket}/${pathObject.name}.png`;
-  const metadata = require(filePath + '.json');
+  const metadata = require(pathObject.dir + '/' + pathObject.name + '.json');
   await videoUpload(userId, pathObject.base.split('_')[1], videoUrl, imageUrl, metadata);
 };

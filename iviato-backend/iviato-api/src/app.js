@@ -93,16 +93,16 @@ app.post('/videos/upload/:id', [authCheck, upload.single('file')], (req, res) =>
   const id = req.params.id;
   const file = req.file;
   const shinobi = req.body.shinobi; 
-  const invokePath = path.resolve('../iviato-pipeline/landmark-detection/pipeline.py');
+  const invokePath = path.resolve('../iviato-pipeline/landmark-detection/pypipeline.py');
   const srcDir = path.resolve('../iviato-storage/')
   const srcName = file.originalname;
   const tgtPath = srcDir + `/${id}_` + srcName;
 
   if (fs.existsSync(tgtPath)) {
-    console.log('***************************** Already Uploaded *****************************');
+    // console.log('***************************** Already Uploaded *****************************');
     setTimeout( () => {
-      res.sendStatus(200);
-    }, 10000);
+      res.sendStatus(208);
+    }, 15000);
     return;
   } else {
     console.log('***************************** Uploading *****************************');

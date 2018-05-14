@@ -1,3 +1,4 @@
+#!/usr/bin python3
 # -----------------------------------------------------------------------------
 # Name:     pipeline.py
 # Purpose:  The entry point to the i-viato pipeline
@@ -24,7 +25,7 @@ def execute_pipeline(userId, srcDir, srcName, isShinobi):
     """
     does the whole pipeline, takes in src directory and name, will put resulting video in same place with "out-' appended to the front of the filename
     """
-    print(f'{userId} - {srcDir} - {srcName}')
+    # print(f'{userId} - {srcDir} - {srcName}')
     videoSrc = srcDir + '/' + srcName 
     metaDataDict = extract_metadata(videoSrc)
 
