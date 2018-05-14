@@ -18,7 +18,7 @@ def execute_pipeline(user_id, src_dir, src_name, is_shinobi):
   start_time = datetime.datetime.now()
   video_name = src_name.split('.')[0]
   video_src = src_dir + '/' + src_name
-  video_tgt = '../iviato-storage/' + str(user_id) + '_' + src_name
+  video_tgt = '../iviato-storage/' + str(user_id) + '_' + video_name + '.mp4'
   image_tgt = '../iviato-storage/' + str(user_id) + '_' + video_name + '.png'
   data_tgt = '../iviato-storage/' + str(user_id) + '_' + video_name + '.json'
   

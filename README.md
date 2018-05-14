@@ -10,13 +10,40 @@ The application front end is implemented using HTML, CSS, and [ReactJS](https://
 React makes it easy to reuse stateful components and allows for efficient rendering. We also made use of the
 [Material UI](https://github.com/mui-org/material-ui) component library to help stylize our UI.  
 
-* [Application Back End](/iviato-api)
-The back end for the application is written using Express and NodeJS.
+* [Application Back End](/iviato-backend)
 
-* [Application Pipeline Code](/iviato-pipeline)
-The pipeline of the application is written using C and Python. We've also made use of Tristan Hume's
-[eyeLike](https://github.com/trishume/eyeLike) for pupil tracking, [dlib](https://github.com/davisking/dlib),
-[OpenCV](https://github.com/opencv/opencv), and [ffmpeg](https://github.com/FFmpeg/FFmpeg)
+    * [Application API](/iviato-api/iviato-api)
+    The back end for the application is written using Express and NodeJS.
+
+    * [Application Pipeline Code](/iviato-backend/iviato-pipeline)
+    The pipeline of the application is written using C and Python. We've also made use of Tristan Hume's
+    [eyeLike](https://github.com/trishume/eyeLike) for pupil tracking, [dlib](https://github.com/davisking/dlib),
+    [OpenCV](https://github.com/opencv/opencv), and [ffmpeg](https://github.com/FFmpeg/FFmpeg)
+
+---
+## Deployment with Docker
+
+#### I-Viato UI
+From the `./iviato-ui`, build and tag the image by running:
+
+  `$ docker build -t iviato-ui .`
+
+After the build is complete, you can start up a container by running:
+
+  `$ docker run -it -v ${PWD}:/usr/src/app -v /usr/src/app/node_modules -p 3000:3000 --rm iviato-ui`
+
+Point your browser to http://localhost:3000/. Hot-realoding works as well.
+
+#### I-Viato Backend
+From the `./iviato-backend`, build and tag the image by running:
+
+  `$ docker build -t iviato-backend .`
+
+After the build is complete, you can start up a container by running:
+
+  `$ docker run -it -v ${PWD}:/usr/src/app -v /usr/src/app/iviato-api/node_modules -p 8081:8081 --rm iviato-backend`
+
+Point your browser to http://localhost:8081/. 
 
 ---
 ### Assignments

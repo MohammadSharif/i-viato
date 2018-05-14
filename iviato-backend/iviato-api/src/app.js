@@ -16,6 +16,7 @@ const _ = require('lodash');
 const auth = config.get('auth0');
 const authorize = require('./service/auth').authorize;
 const db = require('./service/db');
+const demo = config.get('demo');
 const store = require('./service/storage').store;
 
 const app = express();
@@ -93,16 +94,17 @@ app.post('/videos/upload/:id', [authCheck, upload.single('file')], (req, res) =>
   const id = req.params.id;
   const file = req.file;
   const shinobi = req.body.shinobi; 
-  const invokePath = path.resolve('../iviato-pipeline/landmark-detection/pypipeline.py');
+  const invokePath = path.resolve('../iviato-pipeline/landmark-detection/pipeline.py');
   const srcDir = path.resolve('../iviato-storage/')
   const srcName = file.originalname;
   const tgtPath = srcDir + `/${id}_` + srcName;
 
-  if (fs.existsSync(tgtPath)) {
-    // console.log('***************************** Already Uploaded *****************************');
+  if (demo.enabled) {
     setTimeout( () => {
-      res.sendStatus(208);
-    }, 15000);
+      res.sendStatus = 208;
+      const video = file.originalname === 'shinobi.mov' ? demo.shinobi : demo.original;
+      res.send(JSON.stringify({ 'video': video }));
+    }, Math.random() * (20000 - 15000) + 15000);
     return;
   } else {
     console.log('***************************** Uploading *****************************');

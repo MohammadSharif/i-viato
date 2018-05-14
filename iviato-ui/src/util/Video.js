@@ -21,6 +21,11 @@ export async function upload(file, shinobify) {
       'Access-Control-Allow-Origin': '*'
     }
   });
+
+  if (result.data) {
+    console.log(result.data);
+    xChangeCurrentVideo(result.data.video)
+  }
 }
 
 export async function list() {
@@ -49,23 +54,24 @@ export async function list() {
 }
 
 export function changeCurrentVideo(video) {
+  console.log('changing current video to ' + video.filename);
   const all = getAllVideos();
   if (all) {
     let others = _.map(all, (v) => { 
-      if (v.filename !== video.filename) {
+      if (v.filename !== video.filename && v.filename) {
         return v;
       }  
     });
     others = _.without(others, undefined);
+    setOtherVideos(others)
     setCurrentVideo(video);
-    setOtherVideos(others);
   } else {
     return undefined;
   }
 }
 
 export function setCurrentVideo(video) {
-    localStorage.setItem('current_video', JSON.stringify(video));
+  localStorage.setItem('current_video', JSON.stringify(video));
 }
 
 export function getCurrentVideo() {
@@ -94,4 +100,10 @@ function defaultVideo() {
   setCurrentVideo(video);
   console.log(video.url);
   return video;
+}
+
+function xChangeCurrentVideo(video) {
+  console.log('Changing Current video');
+  setOtherVideos([getCurrentVideo()])
+  setCurrentVideo(video);
 }

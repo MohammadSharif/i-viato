@@ -23,7 +23,7 @@ class VideoItem extends Component {
         <img src={this.props.video.imageurl} className="preview" />
         <div className="info">
           <h6 className="video-title">{this.props.video.filename}</h6>
-          <p className="duration">{Math.round(this.props.video.frames/this.props.video.fps)}</p>
+          <p className="duration">{this.props.video.description ? this.props.video.description : Math.round(this.props.video.frames/this.props.video.fps)}</p>
         </div>
       </div>
     );
