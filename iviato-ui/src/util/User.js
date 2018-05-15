@@ -47,7 +47,26 @@ export async function login(email, password) {
   try {
     const response = await request(options);
     storeToken(JSON.parse(response));
-    await list();
+    setOtherVideos([{
+      "filename": "original",
+      "url": "https://s3.us-east-2.amazonaws.com/iviato-videos/94_original.mov",
+      "width":1280,
+      "height":720,
+      "frames":147,
+      "fps":30,
+      "videoid":201,
+      "imageurl": "https://s3.us-east-2.amazonaws.com/iviato-videos/94_original.png"
+    }]);
+    setCurrentVideo({
+      "filename": "shinobi",
+      "url": "https://s3.us-east-2.amazonaws.com/iviato-videos/94_shinobi.mov",
+      "width": 1080,
+      "height": 720,
+      "frames": 147,
+      "fps": 30,
+      "videoid": 202,
+      "imageurl": "https://s3.us-east-2.amazonaws.com/iviato-videos/94_shinobi.png"
+    });
     return true;
   } catch (error) {
     console.log(`-----Error: ${error}`);
