@@ -79,8 +79,10 @@ class MainDashboard extends Component {
   }
 
   handleVideoListClick(video){
+    console.log('handling video list click');
     changeCurrentVideo(video);
     this.setState({ currentVideo: video, uploads: getOtherVideos() });
+    window.location.reload();
   }
 
   toggleLoading(finished) {

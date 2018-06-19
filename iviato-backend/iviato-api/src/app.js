@@ -16,6 +16,7 @@ const _ = require('lodash');
 const auth = config.get('auth0');
 const authorize = require('./service/auth').authorize;
 const db = require('./service/db');
+const demo = config.get('demo');
 const store = require('./service/storage').store;
 
 const app = express();
@@ -98,11 +99,12 @@ app.post('/videos/upload/:id', [authCheck, upload.single('file')], (req, res) =>
   const srcName = file.originalname;
   const tgtPath = srcDir + `/${id}_` + srcName;
 
-  if (fs.existsSync(tgtPath)) {
-    console.log('***************************** Already Uploaded *****************************');
+  if (demo.enabled) {
     setTimeout( () => {
-      res.sendStatus(200);
-    }, 10000);
+      res.sendStatus = 208;
+      const video = file.originalname === 'shinobi.mov' ? demo.shinobi : demo.original;
+      res.send(JSON.stringify({ 'video': video }));
+    }, Math.random() * (20000 - 15000) + 15000);
     return;
   } else {
     console.log('***************************** Uploading *****************************');
