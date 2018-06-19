@@ -153,39 +153,19 @@ def getYPRLine(size, shape, image, isShinobi):
     )
 
     # print ("Camera Matrix :\n {0}".format(camera_matrix))
-    dist_coeffs = np.zeros((4, 1))  # Assuming no lens distortion
-    (success, rotation_vector, translation_vector) = cv2.solvePnP(model_points,
-                                                                  image_points, camera_matrix, dist_coeffs, flags=cv2.SOLVEPNP_ITERATIVE)
-    # print ("Rotation Vector:\n {0}".format(rotation_vector))
-    # print ("Translation Vector:\n {0}".format(translation_vector))
-    # Project a 3D point (0, 0, 1000.0) onto the image plane.
-    # We use this to draw a line sticking out of the nose
-    r = eulerAnglesToRotationMatrix(
-        [success, rotation_vector, translation_vector])
+     
+    dist_coeffs = np.zeros((4,1)) # Assuming no lens distortion
+    (success, rotation_vector, translation_vector) = cv2.solvePnP(model_points, image_points, camera_matrix, dist_coeffs, flags=cv2.SOLVEPNP_ITERATIVE)
+    print ("Success: \n {0}".format(success))
+    print ("Rotation Vector:\n {0}".format(rotation_vector))
+    rvec_matrix = cv2.Rodrigues(rotation_vector)[0]
+    proj_matrix = np.hstack((rvec_matrix, translation_vector))
+    eulerAngles = -cv2.decomposeProjectionMatrix(proj_matrix)[6]
+    print ("Translation Vector:\n {0}".format(translation_vector))
+    print(eulerAngles)
     # Display image
-    return rotation_vector
+    return eulerAngles
 
-
-def eulerAnglesToRotationMatrix(theta):
-
-    R_x = np.array([[1,         0,                  0],
-                    [0,         np.cos(theta[0]), -np.sin(theta[0])],
-                    [0,         np.sin(theta[0]), np.cos(theta[0])]
-                    ])
-
-    R_y = np.array([[np.cos(theta[1]),    0,      np.sin(theta[1])],
-                    [0,                     1,      0],
-                    [-np.sin(theta[1]),   0,      np.cos(theta[1])]
-                    ])
-
-    R_z = np.array([[np.cos(theta[2]),    -np.sin(theta[2]),    0],
-                    [np.sin(theta[2]),    np.cos(theta[2]),     0],
-                    [0,                     0,                      1]
-                    ])
-
-    R = np.dot(R_z, np.dot(R_y, R_x))
-    # print(R)
-    return R
 
 
 def makeShinobi(image, shape):
